@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
@@ -5,17 +6,21 @@ from pymongo import MongoClient
 from datetime import timedelta
 from flask_cors import CORS
 
-# App configuration
+
 app = Flask(__name__)
+
 CORS(app)
 app.config["JWT_SECRET_KEY"] = 'oHNQ*S3ASy=F!^|f11}||P~95v9w7KZFU'
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=6)
 
-# MongoDB and JWT initialization
-client = MongoClient("mongodb://localhost:27017/")
+connection_string = os.getenv('ACCOUNT_URI')
+client = MongoClient(connection_string)
+#create database
 db = client["puzzle_sonrisas"]
+#create collection
 usuarios_collection = db["usuarios"]
 tareas_collection = db["tareas"]
+
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
@@ -31,10 +36,9 @@ def register():
     user_data = {
         "usuario": data["usuario"],
         "password": hashed_password,
-        "rol": data["rol"],  # 'Administrador', 'Alumno', 'Profesor'
-    
+        "rol": data["rol"]  # 'Administrador', 'Alumno', 'Profesor'
     }
-
+    
     usuarios_collection.insert_one(user_data)
     return jsonify({"message": "Usuario registrado con éxito"}), 201
 
@@ -66,6 +70,8 @@ def create_alumno():
         "password": hashed_password,
         "rol": "Alumno",
         "nombre": data["nombre"],
+        "discapacidad": data["discapacidad"],
+        "tareas_asignadas": []
     }
 
     usuarios_collection.insert_one(user_data)
@@ -235,6 +241,10 @@ def update_tarea(tarea_id):
 
     return jsonify({"message": "Tarea actualizada con éxito"}), 200
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route('/test', methods=['GET'])
+def test():
+    item = usuarios_collection.find_one({"name": "Peter"})
+    return jsonify({ "item": item["name"] })
 
+if __name__ == '__main__':
+    app.run(debug=True)
