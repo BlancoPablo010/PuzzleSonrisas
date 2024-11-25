@@ -36,7 +36,7 @@ class _DescribirPasoState extends State<DescribirPaso> {
   }
 
   Future<void> _guardarTarea(BuildContext context) async {
-    final url = Uri.parse(uri + '/tareas');
+    final url = Uri.parse(uri + '/tarea');
     final token = CurrentUser().token;
     try {
       final response = await http.post(

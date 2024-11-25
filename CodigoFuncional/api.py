@@ -66,13 +66,6 @@ def create_alumno():
         "password": hashed_password,
         "rol": "Alumno",
         "nombre": data["nombre"],
-        "apellidos": data["apellidos"],
-        "DNI": data["DNI"],
-        "nombre_tutor_legal": data["nombre_tutor_legal"],
-        "apellidos_tutor_legal": data["apellidos_tutor_legal"],
-        "DNI_tutor_legal": data["DNI_tutor_legal"],
-        "discapacidad": data["discapacidad"],
-        "tareas_asignadas": []
     }
 
     usuarios_collection.insert_one(user_data)

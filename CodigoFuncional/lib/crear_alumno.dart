@@ -8,11 +8,6 @@ import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class CrearAlumno extends StatelessWidget {
   final TextEditingController nombreController = TextEditingController();
-  final TextEditingController apellidosController = TextEditingController();
-  final TextEditingController dniController = TextEditingController();
-  final TextEditingController nombreResponsableController = TextEditingController();
-  final TextEditingController apellidosResponsableController = TextEditingController();
-  final TextEditingController dniResponsableController = TextEditingController();
   final TextEditingController usuarioController = TextEditingController();
   final TextEditingController contrasenaController = TextEditingController();
 
@@ -32,11 +27,6 @@ class CrearAlumno extends StatelessWidget {
           'usuario': usuarioController.text,
           'password': contrasenaController.text,
           'nombre': nombreController.text,
-          'apellidos': apellidosController.text,
-          'DNI': dniController.text,
-          'nombre_tutor_legal': nombreResponsableController.text,
-          'apellidos_tutor_legal': apellidosResponsableController.text,
-          'DNI_tutor_legal': dniResponsableController.text,
           'discapacidad': tipoDiscapacidad,
         }),
       );
@@ -88,70 +78,6 @@ class CrearAlumno extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Apellidos',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: apellidosController,
-                decoration: InputDecoration(
-                  hintText: 'Introduce los apellidos.',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'DNI',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: dniController,
-                decoration: InputDecoration(
-                  hintText: 'Introduce el DNI',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Padre, Madre o Tutor legal',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: nombreResponsableController,
-                decoration: InputDecoration(
-                  hintText: 'Introduce el nombre del responsable',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: apellidosResponsableController,
-                decoration: InputDecoration(
-                  hintText: 'Introduce los apellidos del responsable',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: dniResponsableController,
-                decoration: InputDecoration(
-                  hintText: 'Introduce el DNI del responsable',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
               const Text(
                 'Discapacidad',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -208,11 +134,6 @@ class CrearAlumno extends StatelessWidget {
                       onPressed: () {
                         // Set clear all text fields
                         nombreController.clear();
-                        apellidosController.clear();
-                        dniController.clear();
-                        nombreResponsableController.clear();
-                        apellidosResponsableController.clear();
-                        dniResponsableController.clear();
                         usuarioController.clear();
                         contrasenaController.clear();
                         tipoDiscapacidad = null;
