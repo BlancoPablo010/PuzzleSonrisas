@@ -4,8 +4,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
-class MostrarTareasSecuenciales extends StatelessWidget {
+class MostrarTareasSecuenciales extends StatefulWidget {
   const MostrarTareasSecuenciales({super.key});
+
+  @override
+  _MostrarTareasSecuencialesState createState() => _MostrarTareasSecuencialesState();
+}
+
+class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
+  late Future<List<Map<String, dynamic>>> _tareas;
+
+  @override
+  void initState() {
+    super.initState();
+    _tareas = _fetchTareas();
+  }
 
   Future<List<Map<String, dynamic>>> _fetchTareas() async {
     final url = Uri.parse(uri + '/tareas');
@@ -44,6 +57,9 @@ class MostrarTareasSecuenciales extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Tarea eliminada con éxito.')),
         );
+        setState(() {
+          _tareas = _fetchTareas(); // Recargar las tareas
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error al eliminar la tarea.')),
@@ -63,7 +79,7 @@ class MostrarTareasSecuenciales extends StatelessWidget {
         title: const Text('Actividades Creadas'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _fetchTareas(),
+        future: _tareas,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -110,7 +126,8 @@ class MostrarTareasSecuenciales extends StatelessWidget {
                             SizedBox(width: 8),
                             ElevatedButton(
                               onPressed: () {
-                                // TODO: Navigate to ModificarTareaSecuencial
+                                 // TODO: Navigate to ModificarTareaSecuencial
+                                  Navigator.pushNamed(context, '/tarea', arguments: tarea);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
@@ -134,4 +151,4 @@ class MostrarTareasSecuenciales extends StatelessWidget {
       ),
     );
   }
-}
+}                 

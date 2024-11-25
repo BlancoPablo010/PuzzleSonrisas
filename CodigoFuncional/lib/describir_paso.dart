@@ -21,14 +21,14 @@ class _DescribirPasoState extends State<DescribirPaso> {
   int pasoActual = 1;
   List<Map<String, String>> pasos = [];
   final ImagePicker _picker = ImagePicker();
-  List<String> _imagenesElegidas = []; // Cambiado a List<XFile>
+  List<String> _imagenesElegidas = [];
 
   void _siguientePaso() {
     if (pasoController.text.isNotEmpty) {
       pasos.add({
         'numero_paso': pasoActual.toString(),
         'accion': pasoController.text,
-        'imagen': _imagenesElegidas[pasoActual-1], // Inicializado vacío, se llenará después
+        'imagen': _imagenesElegidas.isNotEmpty && _imagenesElegidas.length >= pasoActual ? _imagenesElegidas[pasoActual-1] : ''
       });
     }
 
@@ -44,22 +44,31 @@ class _DescribirPasoState extends State<DescribirPaso> {
   }
 
   Future<String> _subirImagen(XFile imagen) async {
-    final url = Uri.parse(uri + '/upload');
-    final token = CurrentUser().token;
+    
+    final url = Uri.parse(uriImage + '/upload');
 
     try {
-      var request = http.MultipartRequest('POST', url);
-      request.headers['Authorization'] = 'Bearer $token';
-      request.files.add(await http.MultipartFile.fromPath('file', imagen.path));
+      // Convertir la imagen a bytes
+      final bytes = await imagen.readAsBytes();
+      final String fileName = imagen.name;
 
-      final response = await request.send();
+      // Realizar la solicitud POST
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'X-File-Name': fileName,
+        },
+        body: bytes
+      );
 
-      if (response.statusCode == 200) {
-        final responseData = await http.Response.fromStream(response);
-        final data = json.decode(responseData.body);
-        return data['file_path']; // Supone que el servidor devuelve el path de la imagen
+      // Verificar la respuesta
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return responseData['file_path']; // Devuelve la ruta del archivo como respuesta
       } else {
-        throw Exception('Error al subir la imagen');
+        print('Error al subir la imagen: ${response.statusCode}');
+        return ''; // Devolver cadena vacía en caso de error
       }
     } catch (e) {
       print('Error: $e');
@@ -101,9 +110,9 @@ class _DescribirPasoState extends State<DescribirPaso> {
   }
 
   Future<String> _agregarImagen() async {
+    
     final XFile? imagen = await _picker.pickImage(source: ImageSource.gallery);
     String imagenPath = await _subirImagen(imagen!);
-    
 
     if (imagenPath != "") {
       setState(() {    
@@ -151,7 +160,7 @@ Widget build(BuildContext context) {
           ),
           // Mostrar la imagen elegida en el paso actual
           if (_imagenesElegidas.isNotEmpty && _imagenesElegidas.length >= pasoActual) 
-            Image.asset(_imagenesElegidas[pasoActual-1], height: 200, width: 200), // Mostrar imagen local
+            Image.network(_imagenesElegidas[pasoActual-1], height: 200, width: 200), // Mostrar imagen local
           SizedBox(height: 40),
           SizedBox(
             width: 120,
