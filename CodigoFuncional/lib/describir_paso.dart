@@ -19,14 +19,14 @@ class DescribirPaso extends StatefulWidget {
 class _DescribirPasoState extends State<DescribirPaso> {
   final TextEditingController pasoController = TextEditingController();
   int pasoActual = 1;
-  List<Map<String, String>> pasos = [];
+  List<Map<String, dynamic>> pasos = [];
   final ImagePicker _picker = ImagePicker();
   List<String> _imagenesElegidas = [];
 
   void _siguientePaso() {
     if (pasoController.text.isNotEmpty) {
       pasos.add({
-        'numero_paso': pasoActual.toString(),
+        'numero_paso': pasoActual,
         'accion': pasoController.text,
         'imagen': _imagenesElegidas.isNotEmpty && _imagenesElegidas.length >= pasoActual ? _imagenesElegidas[pasoActual-1] : ''
       });

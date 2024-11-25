@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:http/http.dart' as http;
+import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart';
 import 'dart:convert';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
+import 'package:puzzle_sonrisa/mostrar_tarea_secuencial.dart';
 
 class MostrarTareasSecuenciales extends StatefulWidget {
   const MostrarTareasSecuenciales({super.key});
@@ -92,55 +94,68 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
             return ListView.builder(
               itemCount: tareas.length,
               itemBuilder: (context, index) {
-                final tarea = tareas[index];
+                final tareaJSON = tareas[index];
+                List<String> pasos = [];
+                List<String> imagenes = [];
+                for (int i = 0; i < (tareaJSON['numero_pasos'] as int); i++) {
+                    pasos.add(tareaJSON['pasos'][i]['accion']);
+                    imagenes.add(tareaJSON['pasos'][i]['imagen']);
+                  
+                }
+                final tarea = Tarea(titulo: tareaJSON['titulo'], numero_pasos: tareaJSON['numero_pasos'] as int, pasos: pasos, imagenes: imagenes);
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '${tarea['titulo']}:',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                  child: InkWell(
+                    onTap: () => {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MostrarTareaSecuencial(tarea: tarea),
+                          ))
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              tarea.titulo,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            OutlinedButton(
-                              onPressed: () {
-                                _eliminarTarea(context, tarea['titulo']);
-                              },
-                              style: OutlinedButton.styleFrom(
-                                minimumSize: Size(70, 36),
+                          Row(
+                            children: [
+                              OutlinedButton(
+                                onPressed: () {
+                                  _eliminarTarea(context, tarea.titulo);
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: Size(70, 36),
+                                ),
+                                child: Text('Borrar'),
                               ),
-                              child: Text('Borrar'),
-                            ),
-                            SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: () {
-                                 // TODO: Navigate to ModificarTareaSecuencial
-                                  Navigator.pushNamed(context, '/tarea', arguments: tarea);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                minimumSize: Size(70, 36),
+                              SizedBox(width: 8),
+                              ElevatedButton(
+                                onPressed: () {
+                                   // TODO: Navigate to ModificarTareaSecuencial
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  minimumSize: Size(70, 36),
+                                ),
+                                child: Text(
+                                  'Editar',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                              child: Text(
-                                'Editar',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

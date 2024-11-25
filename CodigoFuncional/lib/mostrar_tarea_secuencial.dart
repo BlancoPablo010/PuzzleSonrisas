@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart';
 
-class TareaAlumno extends StatefulWidget {
+class MostrarTareaSecuencial extends StatefulWidget {
   final Tarea tarea;
 
-  TareaAlumno({required this.tarea});
+  MostrarTareaSecuencial({required this.tarea});
 
   @override
-  _TareaAlumnoState createState() => _TareaAlumnoState();
+  _MostrarTareaSecuencialState createState() => _MostrarTareaSecuencialState();
 }
 
-class _TareaAlumnoState extends State<TareaAlumno> {
+class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
   int _currentStep = 0;
 
   @override
@@ -45,7 +45,7 @@ class _TareaAlumnoState extends State<TareaAlumno> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 16),
-                if (widget.tarea.imagenes.isNotEmpty && widget.tarea.imagenes[_currentStep] != null)
+                if (widget.tarea.imagenes.isNotEmpty && widget.tarea.imagenes[_currentStep] != "")
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 16.0),
                     child: Image.network(
