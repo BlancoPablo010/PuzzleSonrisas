@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
+import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 
 class CrearAlumno extends StatelessWidget {
@@ -18,7 +19,7 @@ class CrearAlumno extends StatelessWidget {
   String? tipoDiscapacidad;
 
   Future<void> _crearAlumno(BuildContext context) async {
-    final url = Uri.parse('http://127.0.0.1:5000/alumno');
+    final url = Uri.parse(uri + '/alumnos');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.post(
