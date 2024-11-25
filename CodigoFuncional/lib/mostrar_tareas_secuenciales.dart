@@ -138,19 +138,17 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                                 ),
                                 child: Text('Borrar'),
                               ),
-                              SizedBox(width: 8),
-                              ElevatedButton(
-                                onPressed: () {
-                                   // TODO: Navigate to ModificarTareaSecuencial
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black,
-                                  minimumSize: Size(70, 36),
-                                ),
-                                child: Text(
-                                  'Editar',
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                              child: Text('Borrar'),
+                            ),
+                            SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: () {
+                                 // TODO: Navigate to ModificarTareaSecuencial
+                                  Navigator.pushNamed(context, '/tarea', arguments: tarea);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                minimumSize: Size(70, 36),
                               ),
                             ],
                           ),
