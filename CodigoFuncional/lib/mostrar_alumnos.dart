@@ -3,11 +3,13 @@ import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:puzzle_sonrisa/modelo/uri.dart';
+
 class MostrarAlumnos extends StatelessWidget {
   const MostrarAlumnos({super.key});
 
   Future<List<Map<String, dynamic>>> _fetchAlumnos() async {
-    final url = Uri.parse('http://127.0.0.1:5000/alumnos');
+    final url = Uri.parse(uri + '/alumnos');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.get(
@@ -29,7 +31,7 @@ class MostrarAlumnos extends StatelessWidget {
   }
 
   Future<void> _eliminarAlumno(BuildContext context, String usuario) async {
-    final url = Uri.parse('http://127.0.0.1:5000/alumnos/$usuario');
+    final url = Uri.parse(uri + '/alumnos/$usuario');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.delete(

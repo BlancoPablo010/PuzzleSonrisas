@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class MostrarTareasSecuenciales extends StatelessWidget {
   const MostrarTareasSecuenciales({super.key});
 
   Future<List<Map<String, dynamic>>> _fetchTareas() async {
-    final url = Uri.parse('http://127.0.0.1:5000/tareas');
+    final url = Uri.parse(uri + '/tareas');
     final token = CurrentUser().token;
     try {
       final response = await http.get(
@@ -30,7 +30,7 @@ class MostrarTareasSecuenciales extends StatelessWidget {
   }
 
   Future<void> _eliminarTarea(BuildContext context, String titulo) async {
-    final url = Uri.parse('http://127.0.0.1:5000/tareas/$titulo');
+    final url = Uri.parse(uri + '/tareas/$titulo');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.delete(

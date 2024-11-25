@@ -1,0 +1,1 @@
+const String uri = "https://puzzle-sonrisas-1-app-cceabja8g7d6huav.westeurope-01.azurewebsites.net";

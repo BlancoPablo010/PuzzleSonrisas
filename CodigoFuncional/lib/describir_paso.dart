@@ -3,6 +3,8 @@ import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:puzzle_sonrisa/modelo/uri.dart';
+
 class DescribirPaso extends StatefulWidget {
   final int pasosTotales;
   final String titulo;
@@ -34,7 +36,7 @@ class _DescribirPasoState extends State<DescribirPaso> {
   }
 
   Future<void> _guardarTarea(BuildContext context) async {
-    final url = Uri.parse('http://127.0.0.1:5000/tarea');
+    final url = Uri.parse(uri + '/tareas');
     final token = CurrentUser().token;
     try {
       final response = await http.post(

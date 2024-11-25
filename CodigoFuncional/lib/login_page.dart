@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
+import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -9,7 +10,7 @@ class LoginPage extends StatelessWidget {
   
 
   Future<void> _login(BuildContext context, String usuario, String password) async {
-    final url = Uri.parse('http://127.0.0.1:5000/login');
+    final url = Uri.parse(uri + '/login');
     try {
       final response = await http.post(
         url,
