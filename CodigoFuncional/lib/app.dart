@@ -4,9 +4,7 @@ import 'package:puzzle_sonrisa/crear_tarea_secuencial.dart';
 import 'package:puzzle_sonrisa/gestionar_alumnos.dart';
 import 'package:puzzle_sonrisa/login_page.dart';
 import 'package:puzzle_sonrisa/mostrar_alumnos.dart';
-import 'package:puzzle_sonrisa/tarea.dart';
-import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart';
-
+import 'package:puzzle_sonrisa/mostrar_tareas_secuenciales.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -27,7 +25,8 @@ class MyApp extends StatelessWidget {
         '/crearAlumno': (context) => CrearAlumno(),
         '/mostrarAlumnos': (context) => const MostrarAlumnos(),
         '/crearTareaSecuencial': (context) => CrearTareaSecuencial(),
-        '/tarea': (context) => TareaAlumno( tarea: Tarea(titulo: 'Tarea de ejemplo', numero_pasos: 3, pasos: ['Paso 1', 'Paso 2', 'Paso 3'], imagenes: ['/img/Prueba.png', '/img/Prueba.png', '/img/Prueba.png'],)),
+        '/mostrarTareasSecuenciales': (context) => const MostrarTareasSecuenciales(),
+        '/agenda': (context) => const SizedBox(), // Falta esto
       },
     );
   }
