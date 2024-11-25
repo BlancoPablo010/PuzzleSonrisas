@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class DescribirPaso extends StatefulWidget {
@@ -19,12 +20,19 @@ class _DescribirPasoState extends State<DescribirPaso> {
   final TextEditingController pasoController = TextEditingController();
   int pasoActual = 1;
   List<Map<String, String>> pasos = [];
+  final ImagePicker _picker = ImagePicker();
+  List<String> _imagenesElegidas = []; // Cambiado a List<XFile>
 
   void _siguientePaso() {
     if (pasoController.text.isNotEmpty) {
-      pasos.add({'numero_paso': pasoActual.toString(), 'accion': pasoController.text});
+      pasos.add({
+        'numero_paso': pasoActual.toString(),
+        'accion': pasoController.text,
+        'imagen': _imagenesElegidas[pasoActual-1], // Inicializado vacío, se llenará después
+      });
     }
 
+    // Solo avanzar si no es la última fase
     if (pasoActual < widget.pasosTotales) {
       setState(() {
         pasoController.clear();
@@ -35,8 +43,32 @@ class _DescribirPasoState extends State<DescribirPaso> {
     }
   }
 
+  Future<String> _subirImagen(XFile imagen) async {
+    final url = Uri.parse(uri + '/upload');
+    final token = CurrentUser().token;
+
+    try {
+      var request = http.MultipartRequest('POST', url);
+      request.headers['Authorization'] = 'Bearer $token';
+      request.files.add(await http.MultipartFile.fromPath('file', imagen.path));
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseData = await http.Response.fromStream(response);
+        final data = json.decode(responseData.body);
+        return data['file_path']; // Supone que el servidor devuelve el path de la imagen
+      } else {
+        throw Exception('Error al subir la imagen');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return ''; // Devolver cadena vacía en caso de error
+    }
+  }
+
   Future<void> _guardarTarea(BuildContext context) async {
-    final url = Uri.parse(uri + '/tareas');
+    final url = Uri.parse(uri + '/tarea');
     final token = CurrentUser().token;
     try {
       final response = await http.post(
@@ -68,59 +100,78 @@ class _DescribirPasoState extends State<DescribirPaso> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Describe el paso $pasoActual de ${widget.pasosTotales}:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: pasoController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Descripción del paso',
-              ),
-            ),
-            SizedBox(height: 40),
-            SizedBox(
-              width: 120,
-              child: ElevatedButton(
-                onPressed: _siguientePaso,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: Text(
-                  _getButtonText(),
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<String> _agregarImagen() async {
+    final XFile? imagen = await _picker.pickImage(source: ImageSource.gallery);
+    String imagenPath = await _subirImagen(imagen!);
+    
+
+    if (imagenPath != "") {
+      setState(() {    
+        _imagenesElegidas.add(imagenPath);
+      });
+    }
+    
+    return imagenPath;
   }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Describe el paso $pasoActual de ${widget.pasosTotales}:',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
+          TextField(
+            controller: pasoController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Descripción del paso',
+            ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _agregarImagen,
+            child: Text('Agregar imagen'),
+          ),
+          // Mostrar la imagen elegida en el paso actual
+          if (_imagenesElegidas.isNotEmpty && _imagenesElegidas.length >= pasoActual) 
+            Image.asset(_imagenesElegidas[pasoActual-1], height: 200, width: 200), // Mostrar imagen local
+          SizedBox(height: 40),
+          SizedBox(
+            width: 120,
+            child: ElevatedButton(
+              onPressed: _siguientePaso,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                padding: EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: Text(
+                _getButtonText(),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   String _getButtonText() {
     if (pasoActual < widget.pasosTotales) {
