@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from pymongo import MongoClient
 from datetime import timedelta
 from flask_cors import CORS
+import base64
 
 
 app = Flask(__name__)
@@ -97,7 +98,7 @@ def delete_alumno(usuario):
 @jwt_required()
 def create_tarea():
     data = request.get_json()
-
+    
     if "titulo" not in data or "numero_pasos" not in data or "pasos" not in data:
         return jsonify({"error": "Faltan campos requeridos"}), 400
     
@@ -105,16 +106,20 @@ def create_tarea():
         return jsonify({"error": "El número de pasos no coincide con la cantidad de elementos en 'pasos'"}), 400
     
     for paso in data["pasos"]:
-        if "numero_paso" not in paso or "accion" not in paso:
-            return jsonify({"error": "Cada paso debe contener 'numero_paso' y 'accion'"}), 400
-    
-
+        if "numero_paso" not in paso or "accion" not in paso or "imagen" not in paso:
+            return jsonify({"error": "Cada paso debe contener 'numero_paso', 'accion', y 'imagen'"}), 400
+        
+        if isinstance(paso["imagen"], str):
+            paso["imagen"] = base64.b64decode(paso["imagen"]) 
+            
+            
     tarea = {
         "titulo": data["titulo"],
         "numero_pasos": data["numero_pasos"],
         "pasos": data["pasos"]
     }
-    # Insert the task into the database
+    
+    # Insertar la tarea en la base de datos
     tarea_id = tareas_collection.insert_one(tarea).inserted_id
     
     return jsonify({"message": "Tarea creada con éxito", "tarea_id": str(tarea_id)}), 201
