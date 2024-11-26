@@ -1,21 +1,27 @@
+import os
 from flask import Flask, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from pymongo import MongoClient
 from datetime import timedelta
 from flask_cors import CORS
+import base64
 
-# App configuration
+
 app = Flask(__name__)
+
 CORS(app)
 app.config["JWT_SECRET_KEY"] = 'oHNQ*S3ASy=F!^|f11}||P~95v9w7KZFU'
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=6)
 
-# MongoDB and JWT initialization
-client = MongoClient("mongodb://localhost:27017/")
+connection_string = os.getenv('ACCOUNT_URI')
+client = MongoClient(connection_string)
+#create database
 db = client["puzzle_sonrisas"]
+#create collection
 usuarios_collection = db["usuarios"]
 tareas_collection = db["tareas"]
+
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
@@ -31,10 +37,9 @@ def register():
     user_data = {
         "usuario": data["usuario"],
         "password": hashed_password,
-        "rol": data["rol"],  # 'Administrador', 'Alumno', 'Profesor'
-    
+        "rol": data["rol"]  # 'Administrador', 'Alumno', 'Profesor'
     }
-
+    
     usuarios_collection.insert_one(user_data)
     return jsonify({"message": "Usuario registrado con éxito"}), 201
 
@@ -66,11 +71,6 @@ def create_alumno():
         "password": hashed_password,
         "rol": "Alumno",
         "nombre": data["nombre"],
-        "apellidos": data["apellidos"],
-        "DNI": data["DNI"],
-        "nombre_tutor_legal": data["nombre_tutor_legal"],
-        "apellidos_tutor_legal": data["apellidos_tutor_legal"],
-        "DNI_tutor_legal": data["DNI_tutor_legal"],
         "discapacidad": data["discapacidad"],
         "tareas_asignadas": []
     }
@@ -98,7 +98,7 @@ def delete_alumno(usuario):
 @jwt_required()
 def create_tarea():
     data = request.get_json()
-
+    
     if "titulo" not in data or "numero_pasos" not in data or "pasos" not in data:
         return jsonify({"error": "Faltan campos requeridos"}), 400
     
@@ -106,16 +106,20 @@ def create_tarea():
         return jsonify({"error": "El número de pasos no coincide con la cantidad de elementos en 'pasos'"}), 400
     
     for paso in data["pasos"]:
-        if "numero_paso" not in paso or "accion" not in paso:
-            return jsonify({"error": "Cada paso debe contener 'numero_paso' y 'accion'"}), 400
-    
-
+        if "numero_paso" not in paso or "accion" not in paso or "imagen" not in paso:
+            return jsonify({"error": "Cada paso debe contener 'numero_paso', 'accion', y 'imagen'"}), 400
+        
+        if isinstance(paso["imagen"], str):
+            paso["imagen"] = base64.b64decode(paso["imagen"]) 
+            
+            
     tarea = {
         "titulo": data["titulo"],
         "numero_pasos": data["numero_pasos"],
         "pasos": data["pasos"]
     }
-    # Insert the task into the database
+    
+    # Insertar la tarea en la base de datos
     tarea_id = tareas_collection.insert_one(tarea).inserted_id
     
     return jsonify({"message": "Tarea creada con éxito", "tarea_id": str(tarea_id)}), 201
@@ -242,6 +246,10 @@ def update_tarea(tarea_id):
 
     return jsonify({"message": "Tarea actualizada con éxito"}), 200
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route('/test', methods=['GET'])
+def test():
+    item = usuarios_collection.find_one({"name": "Peter"})
+    return jsonify({ "item": item["name"] })
 
+if __name__ == '__main__':
+    app.run(debug=True)
