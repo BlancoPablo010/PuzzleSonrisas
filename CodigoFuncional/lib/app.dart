@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/crear_alumno.dart';
 import 'package:puzzle_sonrisa/crear_tarea_secuencial.dart';
 import 'package:puzzle_sonrisa/gestionar_alumnos.dart';
-import 'package:puzzle_sonrisa/login_page.dart';
+import 'package:puzzle_sonrisa/login_administrador.dart';
+import 'package:puzzle_sonrisa/login_alumnos.dart';
 import 'package:puzzle_sonrisa/mostrar_alumnos.dart';
 import 'package:puzzle_sonrisa/mostrar_tareas_secuenciales.dart';
 
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginPage(),
+        '/': (context) => const LoginAlumnos(),
+        '/loginAdministrador': (context) => const LoginAdministrador(), // Falta esto
         '/gestionarAlumnos': (context) => GestionarAlumnos(),
         '/crearAlumno': (context) => CrearAlumno(),
         '/mostrarAlumnos': (context) => const MostrarAlumnos(),

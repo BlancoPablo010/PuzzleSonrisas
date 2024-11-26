@@ -12,7 +12,7 @@ class GestionarAlumnos extends StatelessWidget {
 
   final List<Map<String, dynamic>> buttonsData = [
   {
-  'image': 'assets/alumno.png',
+  'image': 'assets/paginaAdministrador/alumno.png',
   'text': 'Crear Perfil de Alumno',
   'OnPressed': () {
     Navigator.push(
@@ -35,7 +35,7 @@ class GestionarAlumnos extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomButton(
-                    image: 'assets/alumno.png',
+                    image: 'assets/paginaAdministrador/alumno.png',
                     text: 'Crear Perfil de Alumno',
                     onPressed: () {
                       Navigator.push(
@@ -46,7 +46,7 @@ class GestionarAlumnos extends StatelessWidget {
                 SizedBox(width: MediaQuery.of(context).size.width*0.1),
 
                 CustomButton(
-                    image: 'assets/cruz.png',
+                    image: 'assets/paginaAdministrador/cruz.png',
                     text: 'Modificar Alumno',
                     onPressed: () {
                       Navigator.push(
@@ -61,7 +61,7 @@ class GestionarAlumnos extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomButton(
-                    image: 'assets/libros.png',
+                    image: 'assets/paginaAdministrador/libros.png',
                     text: 'Crear Tareas Secuenciales',
                     onPressed: () {
                       Navigator.push(
@@ -72,7 +72,7 @@ class GestionarAlumnos extends StatelessWidget {
                 SizedBox(width: MediaQuery.of(context).size.width*0.1),
 
                 CustomButton(
-                    image: 'assets/libros.png',
+                    image: 'assets/paginaAdministrador/libros.png',
                     text: 'Editar Tareas Secuenciales',
                     onPressed: () {
                       Navigator.push(
@@ -83,7 +83,7 @@ class GestionarAlumnos extends StatelessWidget {
                 SizedBox(width: MediaQuery.of(context).size.width*0.1),
 
                 CustomButton(
-                    image: 'assets/profesor.png',
+                    image: 'assets/paginaAdministrador/profesor.png',
                     text: 'Asignar tareas a alumnos',
                     onPressed: () {
                       Navigator.push(
