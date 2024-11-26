@@ -8,4 +8,5 @@ class CurrentUser {
   CurrentUser._internal();
 
   String? token;
+  String? rol;
 }
