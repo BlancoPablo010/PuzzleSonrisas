@@ -51,7 +51,18 @@ def login():
 
     if user and bcrypt.check_password_hash(user["password"], data["password"]):
         access_token = create_access_token(identity=data["usuario"])
-        return jsonify(access_token=access_token), 200
+        return jsonify(access_token=access_token, rol="Administrador"), 200
+
+    return jsonify({"error": "Credenciales inválidas"}), 401
+
+@app.route("/loginAlumno", methods=["POST"])
+def loginAlumno():
+    data = request.get_json()
+    user = usuarios_collection.find_one({"usuario": data["usuario"], "rol": "Alumno"})
+
+    if user and (user["password"] == data["password"]):
+        access_token = create_access_token(identity=data["usuario"])
+        return jsonify(access_token=access_token, rol="Alumno"), 200
 
     return jsonify({"error": "Credenciales inválidas"}), 401
 
@@ -62,13 +73,12 @@ def create_alumno():
     if "usuario" not in data:
         return jsonify({"error": "Falta el campo 'usuario'"}), 400
 
-    if usuarios_collection.find_one({"usuario": data["usuario"]}):
-        return jsonify({"error": "El usuario ya existe"}), 409
-
-    hashed_password = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
+    if "password" not in data:
+        return jsonify({"error": "Falta el campo 'password'"}), 400
+    
     user_data = {
         "usuario": data["usuario"],
-        "password": hashed_password,
+        "password": data["password"],
         "rol": "Alumno",
         "nombre": data["nombre"],
         "discapacidad": data["discapacidad"],
