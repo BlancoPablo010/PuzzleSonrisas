@@ -6,6 +6,7 @@ import 'package:puzzle_sonrisa/login_administrador.dart';
 import 'package:puzzle_sonrisa/login_alumnos.dart';
 import 'package:puzzle_sonrisa/mostrar_alumnos.dart';
 import 'package:puzzle_sonrisa/mostrar_tareas_secuenciales.dart';
+import 'package:puzzle_sonrisa/agenda.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         '/mostrarAlumnos': (context) => const MostrarAlumnos(),
         '/crearTareaSecuencial': (context) => CrearTareaSecuencial(),
         '/mostrarTareasSecuenciales': (context) => const MostrarTareasSecuenciales(),
-        '/agenda': (context) => const SizedBox(), // Falta esto
+        '/agenda': (context) =>  Agenda(), // Falta esto
       },
     );
   }
