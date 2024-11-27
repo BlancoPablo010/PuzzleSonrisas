@@ -3,40 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
+import 'package:puzzle_sonrisa/password_alumnos.dart';
 
-class LoginAlumnos extends StatelessWidget {
+class LoginAlumnos extends StatefulWidget {
   const LoginAlumnos({super.key});
 
-  Future<void> _login(BuildContext context, String usuario, String password) async {
-    final url = Uri.parse(uri + '/login');
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({'usuario': usuario, 'password': password}),
-      );
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        CurrentUser().rol = responseData['rol'];
-        CurrentUser().token = responseData['access_token'];
+  @override
+  State<LoginAlumnos> createState() => _LoginAlumnosState();
+}
 
-        Navigator.pushNamed(context, '/agenda');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login fallido: Credenciales incorrectas.')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error de red: $e')),
-      );
-    }
-  }
+class _LoginAlumnosState extends State<LoginAlumnos> {
+
+  int user = 0;
+  int? lastClickedPictogram;
+  List<int> password = [];
+
+  final List<Map<String, dynamic>> pictogramasUsuario= [
+    {'id': 1, 'nombre': 'círculo', 'ruta': 'assets/pictogramasUsuario/cerdito.png'},
+    {'id': 2, 'nombre': 'cuadrado', 'ruta': 'assets/pictogramasUsuario/dragón.png'},
+    {'id': 3, 'nombre': 'triángulo', 'ruta': 'assets/pictogramasUsuario/El gato con botas.png'},
+    {'id': 4, 'nombre': 'rombo', 'ruta': 'assets/pictogramasUsuario/genio.png'},
+    {'id': 5, 'nombre': 'estrella', 'ruta': 'assets/pictogramasUsuario/hada.png'},
+    {'id': 6, 'nombre': 'pentágono', 'ruta': 'assets/pictogramasUsuario/sirena.png'},
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final usuarioController = TextEditingController();
-    final passwordController = TextEditingController();
+
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,7 +45,6 @@ class LoginAlumnos extends StatelessWidget {
                 height: 100,
               ),
             ),
-            const SizedBox(height: 20),
             const Text(
               'COLEGIO SAN RAFAEL ALUMNOS',
               style: TextStyle(
@@ -59,38 +52,59 @@ class LoginAlumnos extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: usuarioController,
-              decoration: const InputDecoration(
-                labelText: 'Usuario',
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Contraseña',
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _login(context, usuarioController.text, passwordController.text);
-              },
-              child: const Text('Iniciar Sesión'),
-            ),
+            _crearPictogramasUsuario(context),
             const SizedBox(height: 20),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/loginAdministrador');
               },
-              child: const Text('Iniciar Sesión como Administrador'),
+              child: const Text('Iniciar Sesión como Administrador', ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+
+  Widget _crearPictogramasUsuario(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i=0; i<3; i++) ...[
+              InkWell(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordAlumnos(user: pictogramasUsuario[i]['id'])))
+              },
+              child: 
+                Image.asset(pictogramasUsuario[i]['ruta'], width: 200, height: 200)
+              ),
+              if (i!= 2)
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+            ],
+          ],
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i=3; i<6; i++) ...[
+              InkWell(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordAlumnos(user: pictogramasUsuario[i]['id'])))
+              },
+              child: 
+                Image.asset(pictogramasUsuario[i]['ruta'], width: 200, height: 200)
+              ),
+              if (i!= 5)
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+            ],
+          ],
+        ),
+      ],
     );
   }
 }
