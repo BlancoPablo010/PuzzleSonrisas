@@ -61,7 +61,8 @@ flutter:
 
     - assets/paginaAdministrador/
     - img/
-    - assets/paginaAdministrador/
+    - assets/pictogramasPassword/
+    - assets/pictogramasUsuario/
 
 
   # The following line ensures that the Material Icons font is
