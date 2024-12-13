@@ -287,6 +287,8 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                   },
                   child: Image.asset('assets/flecha.png', width: 200, height: 200),
                 ),
+              ],
+            ),
           ],
         ),
       ),
