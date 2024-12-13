@@ -5,7 +5,7 @@ class Alumno {
   String nombreResponsable;
   String apellidosResponsable;
   String dniResponsable;
-  String discapacidad;
+  String preferencia;
 
   Alumno({
     required this.nombre,
@@ -14,7 +14,7 @@ class Alumno {
     required this.nombreResponsable,
     required this.apellidosResponsable,
     required this.dniResponsable,
-    required this.discapacidad,
+    required this.preferencia,
   });
   
 

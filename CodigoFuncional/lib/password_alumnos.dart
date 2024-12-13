@@ -276,62 +276,17 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                 ],
                 SizedBox(width: MediaQuery.of(context).size.width * 0.02),
                 ElevatedButton(
-                      onPressed: () {
-                        // Aquí se debe validar la contraseña
-                        // Si es correcta, se debe redirigir a la pantalla de inicio
-                        // Si es incorrecta, se debe mostrar un mensaje de error
-                        print('Usuario: ${user.toString()}');
-                        print('Contraseña: ${password.join()}');
+                  onPressed: () {
+                    // Aquí se debe validar la contraseña
+                    // Si es correcta, se debe redirigir a la pantalla de inicio
+                    // Si es incorrecta, se debe mostrar un mensaje de error
+                    print('Usuario: ${user.toString()}');
+                    print('Contraseña: ${password.join()}');
 
-                        _login(context, user.toString(), password.join());
-                      },
-                      child: Image.asset('assets/flecha.png', width: 200, height: 200),
-                    ),
-
-              ]
-            ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     for (int i = 0;( i < password.length ) ; i++)
-              //       if (password[i] == passwordCorrecta[i])
-              //         Container(
-              //           decoration: BoxDecoration(
-              //             border: Border.all(color: Colors.green, width: 5),
-              //             borderRadius: BorderRadius.circular(20),
-              //             color: Colors.green[100],
-              //           ),
-              //           child: Image.asset(pictogramasPassword[password[i] - 1]['ruta'], width: 250, height: 250),
-              //         )
-              //       else
-              //         Container(
-              //           decoration: BoxDecoration(
-              //             border: Border.all(color: Colors.black, width: 5),
-              //             borderRadius: BorderRadius.circular(20),
-              //             color: Colors.red[100],
-              //           ),
-              //           child: Image.asset(pictogramasPassword[password[i] - 1]['ruta'], width: 250, height: 250),
-              //         ),
-              //     if (password.length == 3) ...[
-              //       const SizedBox(height: 50),
-              //       ElevatedButton(
-              //         onPressed: () {
-              //           // Aquí se debe validar la contraseña
-              //           // Si es correcta, se debe redirigir a la pantalla de inicio
-              //           // Si es incorrecta, se debe mostrar un mensaje de error
-              //           print('Usuario: ${user.toString()}');
-              //           print('Contraseña: ${password.join()}');
-
-              //           _login(context, user.toString(), password.join());
-              //         },
-              //         child: Image.asset('assets/flecha.png', width: 200, height: 200),
-              //       ),
-              //     ]
-              //     else
-              //       const SizedBox(width: 200),
-              //   ],
-              // ),
-
+                    _login(context, user.toString(), password.join());
+                  },
+                  child: Image.asset('assets/flecha.png', width: 200, height: 200),
+                ),
           ],
         ),
       ),

@@ -109,4 +109,46 @@ class _LoginAlumnosState extends State<LoginAlumnos> {
       ],
     );
   }
+
+
+  Widget _crearPictogramasUsuario(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i=0; i<3; i++) ...[
+              InkWell(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordAlumnos(user: pictogramasUsuario[i]['id'])))
+              },
+              child: 
+                Image.asset(pictogramasUsuario[i]['ruta'], width: 200, height: 200)
+              ),
+              if (i!= 2)
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+            ],
+          ],
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i=3; i<6; i++) ...[
+              InkWell(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordAlumnos(user: pictogramasUsuario[i]['id'])))
+              },
+              child: 
+                Image.asset(pictogramasUsuario[i]['ruta'], width: 200, height: 200)
+              ),
+              if (i!= 5)
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
 }

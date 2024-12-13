@@ -81,7 +81,8 @@ def create_alumno():
         "password": data["password"],
         "rol": "Alumno",
         "nombre": data["nombre"],
-        "discapacidad": data["discapacidad"],
+        "apellidos": data["apellidos"],
+        "preferencia": data["preferencia"],
         "tareas_asignadas": []
     }
 
