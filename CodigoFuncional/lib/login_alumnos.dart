@@ -32,37 +32,81 @@ class _LoginAlumnosState extends State<LoginAlumnos> {
 
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'COLEGIO SAN RAFAEL INICIO DE SESIÓN',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          _crearPictogramasUsuario(context),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/loginAdministrador');
+            },
+            child: const Text('Iniciar Sesión como Administrador', ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _crearPictogramasUsuario(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Image.asset(
-                'assets/logo.png',
-                width: 100,
-                height: 100,
+            for (int i=0; i<3; i++) ...[
+              InkWell(
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordAlumnos(user: pictogramasUsuario[i]['id'])))
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 5),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.blue[100],
+                  ),
+                  child: Image.asset(pictogramasUsuario[i]['ruta'], width: 300, height: 300),
+                ),
               ),
-            ),
-            const Text(
-              'COLEGIO SAN RAFAEL ALUMNOS',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            _crearPictogramasUsuario(context),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/loginAdministrador');
-              },
-              child: const Text('Iniciar Sesión como Administrador', ),
-            ),
+                
+              if (i!= 2)
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+            ],
           ],
         ),
-      ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i=3; i<6; i++) ...[
+              InkWell(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordAlumnos(user: pictogramasUsuario[i]['id'])))
+              },
+              child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 5),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.blue[100],
+                  ),
+                  child: Image.asset(pictogramasUsuario[i]['ruta'], width: 300, height: 300),
+                ),
+              ),
+              if (i!= 5)
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+            ],
+          ],
+        ),
+      ],
     );
   }
 
