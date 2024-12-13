@@ -12,7 +12,7 @@ class ModificarAlumnos extends StatelessWidget {
   final TextEditingController apellidosResponsableController;
   final TextEditingController dniResponsableController;
 
-  String? tipoDiscapacidad;
+  String? tipoPreferencia;
   
   // Initialize the controller with the student data
     ModificarAlumnos({required this.alumno})
@@ -22,7 +22,7 @@ class ModificarAlumnos extends StatelessWidget {
         nombreResponsableController = TextEditingController(text: alumno.nombreResponsable),
         apellidosResponsableController = TextEditingController(text: alumno.apellidosResponsable),
         dniResponsableController = TextEditingController(text: alumno.dniResponsable),
-        tipoDiscapacidad = alumno.discapacidad,
+        tipoPreferencia = alumno.preferencia,
         super();
 
 
@@ -122,7 +122,7 @@ class ModificarAlumnos extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  'Discapacidad',
+                  'Preferencia',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 DropdownButtonFormField<String>(
@@ -132,9 +132,9 @@ class ModificarAlumnos extends StatelessWidget {
                     ),
                   ),
                   hint: Text('Selecciona la más conveniente'),
-                  value: tipoDiscapacidad,
+                  value: tipoPreferencia,
                   onChanged: (String? newValue) {
-                    tipoDiscapacidad = newValue;
+                    tipoPreferencia = newValue;
                   },
                   items: <String>['Visual', 'Auditiva', 'Motora']
                       .map<DropdownMenuItem<String>>((String value) {

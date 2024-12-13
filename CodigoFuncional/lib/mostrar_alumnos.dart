@@ -100,9 +100,10 @@ class MostrarAlumnos extends StatelessWidget {
                                 '${alumno['nombre']} ${alumno['apellidos']}',
                                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 4),
-                              Text("DNI: ${alumno['DNI']}", style: TextStyle(fontSize: 14)),
-                              Text("Tutor legal: ${alumno['nombre_tutor_legal']}", style: TextStyle(fontSize: 14)),
+                              Text(
+                                'Usuario: ${alumno['usuario']}',
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ],
                           ),
                         ),

@@ -81,7 +81,8 @@ def create_alumno():
         "password": data["password"],
         "rol": "Alumno",
         "nombre": data["nombre"],
-        "discapacidad": data["discapacidad"],
+        "apellidos": data["apellidos"],
+        "preferencia": data["preferencia"],
         "tareas_asignadas": []
     }
 
@@ -93,6 +94,14 @@ def create_alumno():
 def get_alumnos():
     alumnos = usuarios_collection.find({"rol": "Alumno"}, {"_id": 0, "password": 0})
     return jsonify(list(alumnos)), 200
+
+@app.route("/password/<usuario>", methods=["GET"])
+def get_password(usuario):
+    user = usuarios_collection.find_one({"usuario": usuario})
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    return jsonify({"password": user["password"]}), 200
 
 @app.route("/alumnos/<usuario>", methods=["DELETE"])
 @jwt_required()

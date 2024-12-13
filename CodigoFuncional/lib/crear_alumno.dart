@@ -8,10 +8,12 @@ import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class CrearAlumno extends StatelessWidget {
   final TextEditingController nombreController = TextEditingController();
+  final TextEditingController apellidosController = TextEditingController();
   final TextEditingController usuarioController = TextEditingController();
   final TextEditingController contrasenaController = TextEditingController();
 
-  String? tipoDiscapacidad;
+
+  String? tipoPreferencia;
 
   Future<void> _crearAlumno(BuildContext context) async {
     final url = Uri.parse(uri + '/alumno');
@@ -27,7 +29,9 @@ class CrearAlumno extends StatelessWidget {
           'usuario': usuarioController.text,
           'password': contrasenaController.text,
           'nombre': nombreController.text,
-          'discapacidad': tipoDiscapacidad,
+          'apellidos': apellidosController.text,
+          'preferencia': tipoPreferencia,
+
         }),
       );
       if (response.statusCode == 201) {
@@ -78,8 +82,18 @@ class CrearAlumno extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: apellidosController,
+                decoration: InputDecoration(
+                  hintText: 'Introduce el apellido.',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
               const Text(
-                'Discapacidad',
+                'Preferencia',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               DropdownButtonFormField<String>(
@@ -89,9 +103,9 @@ class CrearAlumno extends StatelessWidget {
                   ),
                 ),
                 hint: const Text('Selecciona la más conveniente'),
-                value: tipoDiscapacidad,
+                value: tipoPreferencia,
                 onChanged: (String? newValue) {
-                  tipoDiscapacidad = newValue;
+                  tipoPreferencia = newValue;
                 },
                 items: <String>['Visual', 'Auditiva', 'Motora']
                     .map<DropdownMenuItem<String>>((String value) {
@@ -136,7 +150,7 @@ class CrearAlumno extends StatelessWidget {
                         nombreController.clear();
                         usuarioController.clear();
                         contrasenaController.clear();
-                        tipoDiscapacidad = null;
+                        tipoPreferencia = null;
                       },
                       child: const Text('Vaciar'),
                     ),
