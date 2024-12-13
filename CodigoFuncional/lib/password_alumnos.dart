@@ -20,12 +20,38 @@ class PasswordAlumnos extends StatefulWidget{
 class _PasswordAlumnosState extends State<PasswordAlumnos> {
   int user = 0;
   int? lastClickedPictogram;
-  List<int> password = [];
+  List<int> password = [0,0,0];
+  int passwordPosicion = 0;
+  List<int> passwordCorrecta = [1,1,1];
 
   @override
   initState() {
     super.initState();
     user = widget.user;
+    _getPassword(user);
+  }
+
+  Future<void> _getPassword(int user) async {
+    final url = Uri.parse(uri + '/password/$user');
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final stringPassword = responseData['password'];
+        passwordCorrecta = stringPassword.split('').map<int>((c) => int.parse(c)).toList();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al obtener la contraseña.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de red: $e')),
+      );
+    }
   }
 
   Future<void> _login(BuildContext context, String usuario, String password) async {
@@ -90,17 +116,36 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                   InkWell(
                     onTap: () => {
                       setState(() {
-                        password.add(pictogramasPassword[i]['id']);
+                          for (int j = 0; j<password.length; j++) {
+                            if (password[j] == 0) {
+                              passwordPosicion = j;
+                              break;
+                            } else if (j == 2) {
+                              passwordPosicion = -1;
+                            }
+                          }
+                          if (passwordPosicion != -1) {
+
+                            password[passwordPosicion] = pictogramasPassword[i]['id'];
+                            print(password[passwordPosicion]);
+                          }
+                        
                       }),
                     },
                     child: 
-                      Image.asset(pictogramasPassword[i]['ruta'], width: 200, height: 200)
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 5),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Image.asset(pictogramasPassword[i]['ruta'], width: 200, height: 200),
+                      ),
+                    
                     ),
                     if (i!= 3)
                       SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                 ],
               ],
-
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.1),
             Row(
@@ -110,11 +155,30 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                   InkWell(
                     onTap: () => {
                       setState(() {
-                        password.add(pictogramasPassword[i]['id']);
+                          for (int j = 0; j<password.length; j++) {
+                            if (password[j] == 0) {
+                              passwordPosicion = j;
+                              break;
+                            } else if (j == 2) {
+                              passwordPosicion = -1;
+                            }
+                          }
+                          if (passwordPosicion != -1) {
+
+                            password[passwordPosicion] = pictogramasPassword[i]['id'];
+                            print(password[passwordPosicion]);
+                          }
+                        
                       }),
                     },
                     child: 
-                      Image.asset(pictogramasPassword[i]['ruta'], width: 200, height: 200)
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 5),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Image.asset(pictogramasPassword[i]['ruta'], width: 200, height: 200),
+                      ),
                     ),
                     if (i!= 7)
                       SizedBox(width: MediaQuery.of(context).size.width * 0.1),
@@ -123,15 +187,95 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
               ],
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-            if (password.isNotEmpty) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (int i = 0; i < password.length; i++)
-                    Image.asset(pictogramasPassword[password[i] - 1]['ruta'], width: 250, height: 250),
-                  if (password.length == 3) ...[
-                    const SizedBox(height: 50),
-                    ElevatedButton(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (password[0] != 0) ...[
+                  InkWell(
+                    onTap: () => {
+                      setState(() {
+                        password[0] = 0;
+                      }),
+                    },
+                    child: 
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 5),
+                          borderRadius: BorderRadius.circular(20),
+                          color: password[0] == passwordCorrecta[0] ? Colors.green[100] : Colors.red[100],
+                        ),
+                        child: Image.asset(pictogramasPassword[password[0] - 1]['ruta'], width: 250, height: 250),
+                      ),
+                    ),
+                ] else ... [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: SizedBox(width: 250, height: 250),
+                  ),
+                ],
+        
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+
+                if (password[1] != 0) ...[
+                  InkWell(
+                    onTap: () => {
+                      setState(() {
+                        password[1] = 0;
+                      }),
+                    },
+                    child: 
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 5),
+                          borderRadius: BorderRadius.circular(20),
+                          color: password[1] == passwordCorrecta[1] ? Colors.green[100] : Colors.red[100],
+                        ),
+                        child: Image.asset(pictogramasPassword[password[1] - 1]['ruta'], width: 250, height: 250),
+                      ),
+                    ),
+                ] else ... [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: SizedBox(width: 250, height: 250),
+                  ),
+                ],
+
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+
+                if (password[2] != 0) ...[
+                  InkWell(
+                    onTap: () => {
+                      setState(() {
+                        password[2] = 0;
+                      }),
+                    },
+                    child: 
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 5),
+                          borderRadius: BorderRadius.circular(20),
+                          color: password[2] == passwordCorrecta[2] ? Colors.green[100] : Colors.red[100],
+                        ),
+                        child: Image.asset(pictogramasPassword[password[2] - 1]['ruta'], width: 250, height: 250),
+                      ),
+                    ),
+                ] else ... [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: SizedBox(width: 250, height: 250),
+                  ),
+                ],
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                ElevatedButton(
                       onPressed: () {
                         // Aquí se debe validar la contraseña
                         // Si es correcta, se debe redirigir a la pantalla de inicio
@@ -143,15 +287,51 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                       },
                       child: Image.asset('assets/flecha.png', width: 200, height: 200),
                     ),
-                  ]
-                  else
-                    const SizedBox(width: 200),
-                ],
-              ),
-              
-            ]
-            else 
-              const SizedBox(height: 250),
+
+              ]
+            ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     for (int i = 0;( i < password.length ) ; i++)
+              //       if (password[i] == passwordCorrecta[i])
+              //         Container(
+              //           decoration: BoxDecoration(
+              //             border: Border.all(color: Colors.green, width: 5),
+              //             borderRadius: BorderRadius.circular(20),
+              //             color: Colors.green[100],
+              //           ),
+              //           child: Image.asset(pictogramasPassword[password[i] - 1]['ruta'], width: 250, height: 250),
+              //         )
+              //       else
+              //         Container(
+              //           decoration: BoxDecoration(
+              //             border: Border.all(color: Colors.black, width: 5),
+              //             borderRadius: BorderRadius.circular(20),
+              //             color: Colors.red[100],
+              //           ),
+              //           child: Image.asset(pictogramasPassword[password[i] - 1]['ruta'], width: 250, height: 250),
+              //         ),
+              //     if (password.length == 3) ...[
+              //       const SizedBox(height: 50),
+              //       ElevatedButton(
+              //         onPressed: () {
+              //           // Aquí se debe validar la contraseña
+              //           // Si es correcta, se debe redirigir a la pantalla de inicio
+              //           // Si es incorrecta, se debe mostrar un mensaje de error
+              //           print('Usuario: ${user.toString()}');
+              //           print('Contraseña: ${password.join()}');
+
+              //           _login(context, user.toString(), password.join());
+              //         },
+              //         child: Image.asset('assets/flecha.png', width: 200, height: 200),
+              //       ),
+              //     ]
+              //     else
+              //       const SizedBox(width: 200),
+              //   ],
+              // ),
+
           ],
         ),
       ),
