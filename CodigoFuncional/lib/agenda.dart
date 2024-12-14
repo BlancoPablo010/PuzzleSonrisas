@@ -9,18 +9,21 @@ class Agenda extends StatelessWidget {
   // Lista de tareas por defecto
   final List<Tarea> _tareas = [
     Tarea(
+      id: '1',
       titulo: 'Usar Microondas',
       numero_pasos: 3,
       pasos: ['Paso 1: Abrir Microondas', 'Paso 2: Meter Comida en el microondas', 'Paso 3: Configurar el tiempo'],
       imagenes: ['img/abrir_microondas.jpeg', 'img/meter_comida.jpeg', 'img/configurar_tiempo.jpeg'],
     ),
     Tarea(
+      id: '2',
       titulo: 'Tarea 2',
       numero_pasos: 2,
       pasos: ['Paso 1: Leer instrucciones', 'Paso 2: Completar tarea'],
       imagenes: ['', 'https://via.placeholder.com/150'],
     ),
     Tarea(
+      id: '3',
       titulo: 'Tarea 3',
       numero_pasos: 1,
       pasos: ['Paso único: Enviar resultados'],

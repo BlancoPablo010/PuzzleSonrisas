@@ -58,9 +58,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
-
     - assets/paginaAdministrador/
-    - img/
     - assets/pictogramasPassword/
     - assets/pictogramasUsuario/
 
