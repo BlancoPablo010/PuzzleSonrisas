@@ -108,3 +108,11 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
     );
   }
 }
+
+
+
+/**
+  No se puede crear mas de una tarea por sesión, pero la primera se crea bn 
+  Las fotos 
+
+ */

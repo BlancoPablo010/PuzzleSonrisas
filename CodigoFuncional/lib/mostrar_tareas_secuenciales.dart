@@ -44,8 +44,8 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
     }
   }
 
-  Future<void> _eliminarTarea(BuildContext context, String titulo) async {
-    final url = Uri.parse(uri + '/tareas/$titulo');
+  Future<void> _eliminarTarea(BuildContext context, String id) async {
+    final url = Uri.parse(uri + '/tareas/$id');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.delete(
@@ -99,10 +99,13 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                 List<String> imagenes = [];
                 for (int i = 0; i < (tareaJSON['numero_pasos'] as int); i++) {
                     pasos.add(tareaJSON['pasos'][i]['accion']);
-                    imagenes.add(tareaJSON['pasos'][i]['imagen']);
+                    if (tareaJSON['pasos'][i]['imagen'] != '') {
+
+                      imagenes.add(tareaJSON['pasos'][i]['imagen']);
+                    }
                   
                 }
-                final tarea = Tarea(titulo: tareaJSON['titulo'], numero_pasos: tareaJSON['numero_pasos'] as int, pasos: pasos, imagenes: imagenes);
+                final tarea = Tarea(id: tareaJSON['_id'], titulo: tareaJSON['titulo'], numero_pasos: tareaJSON['numero_pasos'] as int, pasos: pasos, imagenes: imagenes);
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                   child: InkWell(
@@ -131,7 +134,7 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                             children: [
                               OutlinedButton(
                                 onPressed: () {
-                                  _eliminarTarea(context, tarea.titulo);
+                                  _eliminarTarea(context, tarea.id);
                                 },
                                 style: OutlinedButton.styleFrom(
                                   minimumSize: Size(70, 36),

@@ -1,4 +1,5 @@
 import os
+from bson import ObjectId
 from flask import Flask, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
@@ -127,10 +128,6 @@ def create_tarea():
     for paso in data["pasos"]:
         if "numero_paso" not in paso or "accion" not in paso or "imagen" not in paso:
             return jsonify({"error": "Cada paso debe contener 'numero_paso', 'accion', y 'imagen'"}), 400
-        
-        if isinstance(paso["imagen"], str):
-            paso["imagen"] = base64.b64decode(paso["imagen"]) 
-            
             
     tarea = {
         "titulo": data["titulo"],
@@ -147,14 +144,19 @@ def create_tarea():
 @jwt_required()
 def get_tareas():
     tareas_collection = db["tareas"]
-    tareas = tareas_collection.find({}, {"_id": 0})
+    tareas = list(tareas_collection.find()) 
+    
+    for tarea in tareas:
+        tarea['_id'] = str(tarea['_id'])  
+    
     return jsonify(list(tareas)), 200
 
+
 # Delete a specific task
-@app.route("/tareas/<titulo>", methods=["DELETE"])
+@app.route("/tareas/<id>", methods=["DELETE"])
 @jwt_required()
-def delete_tarea(titulo):
-    result = tareas_collection.delete_one({"titulo": titulo})
+def delete_tarea(id):
+    result = tareas_collection.delete_one({"_id": ObjectId(id)})
     if result.deleted_count == 0:
         return jsonify({"error": "No se encontró la tarea"}), 404
 
