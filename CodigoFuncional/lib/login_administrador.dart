@@ -10,7 +10,7 @@ class LoginAdministrador extends StatelessWidget {
   
 
   Future<void> _login(BuildContext context, String usuario, String password) async {
-    final url = Uri.parse(uri + '/login');
+    final url = Uri.parse('$uri/login');
     try {
       final response = await http.post(
         url,
@@ -24,7 +24,7 @@ class LoginAdministrador extends StatelessWidget {
         Navigator.pushNamed(context, '/gestionarAlumnos');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login fallido: Credenciales incorrectas.')),
+          const SnackBar(content: Text('Login fallido: Credenciales incorrectas.')),
         );
       }
     } catch (e) {

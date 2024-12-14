@@ -15,15 +15,14 @@ class ModificarAlumnos extends StatelessWidget {
   String? tipoPreferencia;
   
   // Initialize the controller with the student data
-    ModificarAlumnos({required this.alumno})
+    ModificarAlumnos({super.key, required this.alumno})
       : nombreController = TextEditingController(text: alumno.nombre),
         apellidosController = TextEditingController(text: alumno.apellidos),
         dniController = TextEditingController(text: alumno.dni),
         nombreResponsableController = TextEditingController(text: alumno.nombreResponsable),
         apellidosResponsableController = TextEditingController(text: alumno.apellidosResponsable),
         dniResponsableController = TextEditingController(text: alumno.dniResponsable),
-        tipoPreferencia = alumno.preferencia,
-        super();
+        tipoPreferencia = alumno.preferencia;
 
 
     @override
@@ -31,12 +30,12 @@ class ModificarAlumnos extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          title: Text('Modificar Alumno'),
+          title: const Text('Modificar Alumno'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -44,7 +43,7 @@ class ModificarAlumnos extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Nombre',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -57,8 +56,8 @@ class ModificarAlumnos extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Apellidos',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -71,8 +70,8 @@ class ModificarAlumnos extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'DNI',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -85,12 +84,12 @@ class ModificarAlumnos extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Padre, Madre o Tutor legal',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextField(
                   controller: nombreResponsableController,
                   decoration: InputDecoration(
@@ -100,7 +99,7 @@ class ModificarAlumnos extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextField(
                   controller: apellidosResponsableController,
                   decoration: InputDecoration(
@@ -110,7 +109,7 @@ class ModificarAlumnos extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextField(
                   controller: dniResponsableController,
                   decoration: InputDecoration(
@@ -120,8 +119,8 @@ class ModificarAlumnos extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Preferencia',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -131,7 +130,7 @@ class ModificarAlumnos extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  hint: Text('Selecciona la más conveniente'),
+                  hint: const Text('Selecciona la más conveniente'),
                   value: tipoPreferencia,
                   onChanged: (String? newValue) {
                     tipoPreferencia = newValue;
@@ -144,7 +143,7 @@ class ModificarAlumnos extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -153,10 +152,10 @@ class ModificarAlumnos extends StatelessWidget {
                         onPressed: () {
                           // Set clear the text fields
                         },
-                        child: Text('Vaciar'),
+                        child: const Text('Vaciar'),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -166,7 +165,7 @@ class ModificarAlumnos extends StatelessWidget {
                           backgroundColor: Colors.black,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Enviar',
                           style: TextStyle(color: Colors.white), 
                         ),

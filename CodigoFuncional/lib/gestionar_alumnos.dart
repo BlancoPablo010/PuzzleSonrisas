@@ -51,7 +51,7 @@ class GestionarAlumnos extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MostrarAlumnos(),
+                          MaterialPageRoute(builder: (context) => const MostrarAlumnos(),
                           ));
                     }),
               ],
@@ -77,7 +77,7 @@ class GestionarAlumnos extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MostrarTareasSecuenciales(),
+                          MaterialPageRoute(builder: (context) => const MostrarTareasSecuenciales(),
                           ));
                     }),
                 SizedBox(width: MediaQuery.of(context).size.width*0.1),

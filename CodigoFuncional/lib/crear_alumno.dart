@@ -15,8 +15,10 @@ class CrearAlumno extends StatelessWidget {
 
   String? tipoPreferencia;
 
+  CrearAlumno({super.key});
+
   Future<void> _crearAlumno(BuildContext context) async {
-    final url = Uri.parse(uri + '/alumno');
+    final url = Uri.parse('$uri/alumno');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.post(

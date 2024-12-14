@@ -9,7 +9,7 @@ class MostrarAlumnos extends StatelessWidget {
   const MostrarAlumnos({super.key});
 
   Future<List<Map<String, dynamic>>> _fetchAlumnos() async {
-    final url = Uri.parse(uri + '/alumnos');
+    final url = Uri.parse('$uri/alumnos');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.get(
@@ -31,7 +31,7 @@ class MostrarAlumnos extends StatelessWidget {
   }
 
   Future<void> _eliminarAlumno(BuildContext context, String usuario) async {
-    final url = Uri.parse(uri + '/alumnos/$usuario');
+    final url = Uri.parse('$uri/alumnos/$usuario');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.delete(
@@ -43,16 +43,16 @@ class MostrarAlumnos extends StatelessWidget {
       );
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Alumno eliminado con éxito.')),
+          const SnackBar(content: Text('Alumno eliminado con éxito.')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al eliminar el alumno.')),
+          const SnackBar(content: Text('Error al eliminar el alumno.')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error de conexión con el servidor.')),
+        const SnackBar(content: Text('Error de conexión con el servidor.')),
       );
     }
   }
@@ -67,9 +67,9 @@ class MostrarAlumnos extends StatelessWidget {
         future: _fetchAlumnos(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No se encontraron alumnos'));
+            return const Center(child: Text('No se encontraron alumnos'));
           } else {
             final alumnos = snapshot.data!;
             return ListView.builder(
@@ -89,25 +89,25 @@ class MostrarAlumnos extends StatelessWidget {
                         CircleAvatar(
                           radius: 40,
                           backgroundColor: Colors.grey.shade400,
-                          child: Icon(Icons.person, size: 40, color: Colors.white),
+                          child: const Icon(Icons.person, size: 40, color: Colors.white),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${alumno['nombre']} ${alumno['apellidos']}',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 'Usuario: ${alumno['usuario']}',
-                                style: TextStyle(fontSize: 16),
+                                style: const TextStyle(fontSize: 16),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Column(
                           children: [
                             ElevatedButton(
@@ -117,19 +117,19 @@ class MostrarAlumnos extends StatelessWidget {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               ),
-                              child: Text('Eliminar', style: TextStyle(color: Colors.white)),
+                              child: const Text('Eliminar', style: TextStyle(color: Colors.white)),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             OutlinedButton(
                               onPressed: () {
                                 // Navigate to the modify student page
                               },
                               style: OutlinedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               ),
-                              child: Text('Modificar datos', style: TextStyle(color: Colors.black)),
+                              child: const Text('Modificar datos', style: TextStyle(color: Colors.black)),
                             ),
                           ],
                         ),

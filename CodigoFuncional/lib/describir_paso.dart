@@ -10,7 +10,7 @@ class DescribirPaso extends StatefulWidget {
   final int pasosTotales;
   final String titulo;
 
-  DescribirPaso({required this.titulo, required this.pasosTotales});
+  const DescribirPaso({super.key, required this.titulo, required this.pasosTotales});
 
   @override
   _DescribirPasoState createState() => _DescribirPasoState();
@@ -21,7 +21,7 @@ class _DescribirPasoState extends State<DescribirPaso> {
   int pasoActual = 1;
   List<Map<String, dynamic>> pasos = [];
   final ImagePicker _picker = ImagePicker();
-  List<String> _imagenesElegidas = [];
+  final List<String> _imagenesElegidas = [];
 
   void _siguientePaso() {
     if (pasoController.text.isNotEmpty) {
@@ -45,7 +45,7 @@ class _DescribirPasoState extends State<DescribirPaso> {
 
   Future<String> _subirImagen(XFile imagen) async {
     
-    final url = Uri.parse(uriImage + '/upload');
+    final url = Uri.parse('$uriImage/upload');
 
     try {
       // Convertir la imagen a bytes
@@ -77,7 +77,7 @@ class _DescribirPasoState extends State<DescribirPaso> {
   }
 
   Future<void> _guardarTarea(BuildContext context) async {
-    final url = Uri.parse(uri + '/tarea');
+    final url = Uri.parse('$uri/tarea');
     final token = CurrentUser().token;
     try {
       final response = await http.post(
@@ -94,17 +94,17 @@ class _DescribirPasoState extends State<DescribirPaso> {
       );
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Tarea creada con éxito.')),
+          const SnackBar(content: Text('Tarea creada con éxito.')),
         );
         Navigator.pushNamed(context, '/gestionarAlumnos');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al crear la tarea.')),
+          const SnackBar(content: Text('Error al crear la tarea.')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error de conexión con el servidor.')),
+        const SnackBar(content: Text('Error de conexión con el servidor.')),
       );
     }
   }
@@ -128,7 +128,7 @@ Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       leading: IconButton(
-        icon: Icon(Icons.arrow_back),
+        icon: const Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);
         },
@@ -141,38 +141,38 @@ Widget build(BuildContext context) {
         children: [
           Text(
             'Describe el paso $pasoActual de ${widget.pasosTotales}:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextField(
             controller: pasoController,
             maxLines: 3,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Descripción del paso',
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _agregarImagen,
-            child: Text('Agregar imagen'),
+            child: const Text('Agregar imagen'),
           ),
           // Mostrar la imagen elegida en el paso actual
           if (_imagenesElegidas.isNotEmpty && _imagenesElegidas.length >= pasoActual) 
             Image.network(_imagenesElegidas[pasoActual-1], height: 200, width: 200), // Mostrar imagen local
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           SizedBox(
             width: 120,
             child: ElevatedButton(
               onPressed: _siguientePaso,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               child: Text(
                 _getButtonText(),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ),

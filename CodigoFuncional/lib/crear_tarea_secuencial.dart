@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/describir_paso.dart';
 
 class CrearTareaSecuencial extends StatefulWidget {
+  const CrearTareaSecuencial({super.key});
+
   @override
   _CrearTareaSecuencialState createState() => _CrearTareaSecuencialState();
 }
@@ -23,7 +25,7 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Por favor, introduce un título y un número válido de pasos")),
+        const SnackBar(content: Text("Por favor, introduce un título y un número válido de pasos")),
       );
     }
   }
@@ -33,7 +35,7 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -45,7 +47,7 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Título de la Actividad',
                 style: TextStyle(
                   fontSize: 18,
@@ -53,20 +55,20 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 width: 300,
                 child: TextField(
                   controller: tituloController,
                   textAlign: TextAlign.center,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Introduce el título de la actividad',
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 '¿Cuántos pasos son necesarios para llevar a cabo la tarea?',
                 style: TextStyle(
                   fontSize: 18,
@@ -74,28 +76,28 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 width: 100,
                 child: TextField(
                   controller: pasosController,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               SizedBox(
                 width: 120,
                 child: ElevatedButton(
                   onPressed: _siguientePantalla,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Siguiente',
                     style: TextStyle(color: Colors.white),
                   ),
