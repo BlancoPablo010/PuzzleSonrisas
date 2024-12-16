@@ -9,4 +9,5 @@ class CurrentUser {
 
   String? token;
   String? rol;
+  String? id;
 }
