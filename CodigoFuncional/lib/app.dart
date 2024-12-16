@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
         '/loginAdministrador': (context) => const LoginAdministrador(),
         '/gestionarAlumnos': (context) => GestionarAlumnos(),
         '/crearAlumno': (context) => CrearAlumno(),
-        '/mostrarAlumnos': (context) => const MostrarAlumnos(),
+        '/mostrarAlumnos': (context) => MostrarAlumnos(),
         '/crearTareaSecuencial': (context) => CrearTareaSecuencial(),
         '/mostrarTareasSecuenciales': (context) => const MostrarTareasSecuenciales(),
-        '/asignarTareas': (context) => const AsignarTareas(),
+        '/asignarTareas': (context) => AsignarTareas(),
         '/agenda': (context) =>  Agenda(),
       },
     );

@@ -3,25 +3,22 @@ import 'dart:js';
 import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/crear_alumno.dart';
 import 'package:puzzle_sonrisa/componentes/boton.dart';
-import 'package:puzzle_sonrisa/mostrar_alumnos.dart';
-import 'package:puzzle_sonrisa/crear_tarea_secuencial.dart';
-import 'package:puzzle_sonrisa/mostrar_tareas_secuenciales.dart';
 
 class GestionarAlumnos extends StatelessWidget {
   GestionarAlumnos({super.key});
 
   final List<Map<String, dynamic>> buttonsData = [
-  {
-  'image': 'assets/paginaAdministrador/alumno.png',
-  'text': 'Crear Perfil de Alumno',
-  'OnPressed': () {
-    Navigator.push(
-        context as BuildContext,
-        MaterialPageRoute(builder: (context) => CrearAlumno(),
-        ));
-  }
-},
-];
+    {
+    'image': 'assets/paginaAdministrador/alumno.png',
+    'text': 'Crear Perfil de Alumno',
+    'OnPressed': () {
+      Navigator.push(
+          context as BuildContext,
+          MaterialPageRoute(builder: (context) => CrearAlumno(),
+          ));
+      }
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {

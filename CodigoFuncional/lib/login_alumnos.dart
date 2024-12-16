@@ -15,12 +15,12 @@ class _LoginAlumnosState extends State<LoginAlumnos> {
   List<int> password = [];
 
   final List<Map<String, dynamic>> pictogramasUsuario= [
-    {'id': 1, 'nombre': 'círculo', 'ruta': 'assets/pictogramasUsuario/cerdito.png'},
-    {'id': 2, 'nombre': 'cuadrado', 'ruta': 'assets/pictogramasUsuario/dragón.png'},
-    {'id': 3, 'nombre': 'triángulo', 'ruta': 'assets/pictogramasUsuario/El gato con botas.png'},
-    {'id': 4, 'nombre': 'rombo', 'ruta': 'assets/pictogramasUsuario/genio.png'},
-    {'id': 5, 'nombre': 'estrella', 'ruta': 'assets/pictogramasUsuario/hada.png'},
-    {'id': 6, 'nombre': 'pentágono', 'ruta': 'assets/pictogramasUsuario/sirena.png'},
+    {'id': 1, 'ruta': 'assets/pictogramasUsuario/cerdito.png'},
+    {'id': 2, 'ruta': 'assets/pictogramasUsuario/dragón.png'},
+    {'id': 3, 'ruta': 'assets/pictogramasUsuario/El gato con botas.png'},
+    {'id': 4, 'ruta': 'assets/pictogramasUsuario/genio.png'},
+    {'id': 5, 'ruta': 'assets/pictogramasUsuario/hada.png'},
+    {'id': 6, 'ruta': 'assets/pictogramasUsuario/sirena.png'},
   ];
 
   @override
