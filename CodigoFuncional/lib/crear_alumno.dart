@@ -6,6 +6,7 @@ import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 
+// ignore: must_be_immutable
 class CrearAlumno extends StatelessWidget {
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController apellidosController = TextEditingController();
@@ -14,6 +15,8 @@ class CrearAlumno extends StatelessWidget {
 
 
   String? tipoPreferencia;
+
+  CrearAlumno({super.key});
 
   Future<void> _crearAlumno(BuildContext context) async {
     final url = Uri.parse(uri + '/alumno');

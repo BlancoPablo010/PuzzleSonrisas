@@ -3,7 +3,6 @@ import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class DescribirPaso extends StatefulWidget {

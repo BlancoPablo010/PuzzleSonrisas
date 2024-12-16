@@ -1,8 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:puzzle_sonrisa/modelo/current_user.dart';
-import 'package:puzzle_sonrisa/modelo/uri.dart';
 import 'package:puzzle_sonrisa/password_alumnos.dart';
 
 class LoginAlumnos extends StatefulWidget {
