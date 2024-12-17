@@ -20,6 +20,7 @@ db = client["puzzle_sonrisas"]
 #create collection
 usuarios_collection = db["usuarios"]
 tareas_collection = db["tareas"]
+materiales_collection = db["materiales"]
 
 
 bcrypt = Bcrypt(app)
@@ -50,7 +51,7 @@ def login():
 
     if user and bcrypt.check_password_hash(user["password"], data["password"]):
         access_token = create_access_token(identity=data["usuario"])
-        return jsonify(access_token=access_token, rol="Administrador"), 200
+        return jsonify(access_token=access_token, rol=user["rol"]), 200
 
     return jsonify({"error": "Credenciales inválidas"}), 401
 
@@ -286,6 +287,86 @@ def update_tarea(tarea_id):
         return jsonify({"error": "No se encontró la tarea"}), 404
 
     return jsonify({"message": "Tarea actualizada con éxito"}), 200
+
+@app.route("/profesor", methods=["POST"])
+@jwt_required()
+def create_profesor():
+    data = request.get_json()
+    if "usuario" not in data:
+        return jsonify({"error": "Falta el campo 'usuario'"}), 400
+
+    if "password" not in data:
+        return jsonify({"error": "Falta el campo 'password'"}), 400
+    
+    hashed_password = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
+    
+    user_data = {
+        "usuario": data["usuario"],
+        "password": hashed_password,
+        "rol": "Profesor",
+        "nombre": data["nombre"],
+        "apellidos": data["apellidos"]
+    }
+
+    usuarios_collection.insert_one(user_data)
+    return jsonify({"message": "Profesor creado con éxito"}), 201
+
+@app.route("/profesores", methods=["GET"])
+@jwt_required()
+def get_profesores():
+    usuarios_collection = db["usuarios"]
+    profesores = list(usuarios_collection.find({"rol": "Profesor"}))
+    
+    for profesor in profesores:
+        profesor['_id'] = str(profesor['_id'])  
+    
+    return jsonify(profesores), 200
+
+@app.route("/profesores/<id>", methods=["DELETE"])
+@jwt_required()
+def delete_profesor(id):
+    result = usuarios_collection.delete_one({"_id": ObjectId(id), "rol": "Profesor"})
+    if result.deleted_count == 0:
+        return jsonify({"error": "No se encontró el profesor"}), 404
+
+    return jsonify({"message": "Profesor eliminado con éxito"}), 200
+
+
+@app.route("/material", methods=["POST"])
+@jwt_required()
+def create_material():
+    data = request.get_json()
+    if "titulo" not in data or "imagen" not in data:
+        return jsonify({"error": "Faltan campos requeridos"}), 400
+    
+    material = {
+        "titulo": data["titulo"],
+        "imagen": data["imagen"]
+    }
+    
+    # Insertar el material en la base de datos
+    material_id = materiales_collection.insert_one(material).inserted_id
+    
+    return jsonify({"message": "Material creado con éxito", "material_id": str(material_id)}), 201
+
+@app.route("/materiales", methods=["GET"])
+@jwt_required()
+def get_materiales():
+    materiales = list(materiales_collection.find()) 
+    
+    for material in materiales:
+        material['_id'] = str(material['_id'])  
+    
+    return jsonify(list(materiales)), 200
+
+@app.route("/materiales/<id>", methods=["DELETE"])
+@jwt_required()
+def delete_material(id):
+    result = materiales_collection.delete_one({"_id": ObjectId(id)})
+    if result.deleted_count == 0:
+        return jsonify({"error": "No se encontró el material"}), 404
+
+    return jsonify({"message": "Material eliminado con éxito"}), 200
 
 @app.route('/test', methods=['GET'])
 def test():

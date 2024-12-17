@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
-class LoginAdministrador extends StatelessWidget {
-  const LoginAdministrador({super.key});
+class LoginNormal extends StatelessWidget {
+  const LoginNormal({super.key});
 
   
 
@@ -20,8 +20,13 @@ class LoginAdministrador extends StatelessWidget {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         CurrentUser().token = responseData['access_token'];
+        CurrentUser().rol = responseData['rol'];
 
-        Navigator.pushNamed(context, '/gestionarAlumnos');
+        if (CurrentUser().rol == 'Administrador') {
+            Navigator.pushNamed(context, '/vistaAdministrador');
+        } else if (CurrentUser().rol == 'Profesor') {
+          Navigator.pushNamed(context, '/vistaProfesor');
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login fallido: Credenciales incorrectas.')),
