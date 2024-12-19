@@ -21,6 +21,7 @@ db = client["puzzle_sonrisas"]
 usuarios_collection = db["usuarios"]
 tareas_collection = db["tareas"]
 materiales_collection = db["materiales"]
+peticiones_material_collection = db["peticiones_material"]
 
 
 bcrypt = Bcrypt(app)
@@ -344,7 +345,6 @@ def create_material():
         "imagen": data["imagen"]
     }
     
-    # Insertar el material en la base de datos
     material_id = materiales_collection.insert_one(material).inserted_id
     
     return jsonify({"message": "Material creado con éxito", "material_id": str(material_id)}), 201
@@ -367,6 +367,45 @@ def delete_material(id):
         return jsonify({"error": "No se encontró el material"}), 404
 
     return jsonify({"message": "Material eliminado con éxito"}), 200
+
+@app.route("/peticion_material", methods=["POST"])
+@jwt_required()
+def create_peticion():
+    data = request.get_json()
+    if "titulo" not in data or "materiales" not in data:
+        return jsonify({"error": "Faltan campos requeridos"}), 400
+    
+    for material in data["materiales"]:
+        if "id_material" not in material:
+            return jsonify({"error": "Cada material debe tener 'id_material'"}), 400
+    
+    peticion_material = {
+        "titulo": data["titulo"],
+        "materiales": data["materiales"]
+    }
+
+    peticion_id = peticiones_material_collection.insert_one(peticion_material).inserted_id
+    
+    return jsonify({"message": "Petición creada con éxito", "peticion_id": str(peticion_id)}), 201
+
+@app.route("/peticiones", methods=["GET"])
+@jwt_required()
+def get_peticiones():
+    peticiones = list(peticiones_material_collection.find()) 
+    
+    for peticion in peticiones:
+        peticion['_id'] = str(peticion['_id'])  
+    
+    return jsonify(list(peticiones)), 200
+
+@app.route("/peticiones/<id>", methods=["DELETE"])
+@jwt_required()
+def delete_peticion(id):
+    result = peticiones_material_collection.delete_one({"_id": ObjectId(id)})
+    if result.deleted_count == 0:
+        return jsonify({"error": "No se encontró la petición"}), 404
+
+    return jsonify({"message": "Petición eliminada con éxito"}), 200
 
 @app.route('/test', methods=['GET'])
 def test():

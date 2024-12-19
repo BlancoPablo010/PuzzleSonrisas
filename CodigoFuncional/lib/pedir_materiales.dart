@@ -16,6 +16,8 @@ class _PedirMaterialesState extends State<PedirMateriales> {
 
   late Future<List<Map<String, dynamic>>> _materiales;
 
+  List<Map<String, dynamic>> _idMaterialesSeleccionados = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -51,6 +53,32 @@ class _PedirMaterialesState extends State<PedirMateriales> {
     }
   }
 
+  Future<void> _pedirMateriales() async {
+    final url = Uri.parse(uri + '/peticion_material');
+    final token = CurrentUser().token!;
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'body': json.encode({
+            'titulo': 'Peticion de materiales',
+            'materiales': _idMaterialesSeleccionados,
+          }),
+        },
+      );
+      if (response.statusCode == 200) {
+        Navigator.pop(context);
+        const SnackBar(content: Text('Materiales pedidos con éxito.'));
+      } else {
+        throw Exception('Failed to create peticion: ${response.statusCode} + ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching materiales: $e');
+    }
+  }
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +130,11 @@ class _PedirMaterialesState extends State<PedirMateriales> {
                         onChanged: (value) {
                           setState(() {
                             materiales[index]['checked'] = value;
+                            if (value == true) {
+                              _idMaterialesSeleccionados.add({'id_material': materiales[index]['_id']});
+                            } else {
+                              _idMaterialesSeleccionados.remove({'id_material': materiales[index]['_id']});
+                            }
                           });
                         },
                         controlAffinity: ListTileControlAffinity.trailing,
@@ -117,7 +150,7 @@ class _PedirMaterialesState extends State<PedirMateriales> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -125,18 +158,7 @@ class _PedirMaterialesState extends State<PedirMateriales> {
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                   ),
                   onPressed: () {
-                    print('Materiales añadidos');
-                  },
-                  child: const Text('Añadir', style: TextStyle(color: Colors.white)),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  ),
-                  onPressed: () {
-                    print('Pedido finalizado');
-                    //TODO: Enviar pedido al servidor
+                    _pedirMateriales();
                   },
                   child: const Text('Finalizar', style: TextStyle(color: Colors.white)),
                 ),
