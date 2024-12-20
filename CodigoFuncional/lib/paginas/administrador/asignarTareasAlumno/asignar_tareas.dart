@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_sonrisa/asignar_tareas_alumno.dart';
+import 'package:puzzle_sonrisa/paginas/administrador/asignarTareasAlumno/asignar_tareas_alumno.dart';
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

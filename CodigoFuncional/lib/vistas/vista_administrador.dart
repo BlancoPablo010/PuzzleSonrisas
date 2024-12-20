@@ -1,24 +1,8 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
-import 'package:puzzle_sonrisa/crear_alumno.dart';
-import 'package:puzzle_sonrisa/componentes/boton.dart';
+import 'package:puzzle_sonrisa/widgets/boton.dart';
 
-class GestionarAlumnos extends StatelessWidget {
-  GestionarAlumnos({super.key});
-
-  final List<Map<String, dynamic>> buttonsData = [
-    {
-    'image': 'assets/paginaAdministrador/alumno.png',
-    'text': 'Crear Perfil de Alumno',
-    'OnPressed': () {
-      Navigator.push(
-          context as BuildContext,
-          MaterialPageRoute(builder: (context) => CrearAlumno(),
-          ));
-      }
-    },
-  ];
+class VistaAdministrador extends StatelessWidget {
+  VistaAdministrador({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +21,7 @@ class GestionarAlumnos extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(context, '/crearAlumno');
                     }),
+
                 SizedBox(width: MediaQuery.of(context).size.width*0.1),
 
                 CustomButton(
@@ -45,6 +30,24 @@ class GestionarAlumnos extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(context, '/mostrarAlumnos');
                     }),
+
+                SizedBox(width: MediaQuery.of(context).size.width*0.1),
+
+                CustomButton(
+                    image: 'assets/paginaAdministrador/profesor.png',
+                    text: 'Mostrar Profesores',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/mostrarProfesores');
+                    }),
+
+                SizedBox(width: MediaQuery.of(context).size.width*0.1),
+
+                CustomButton(
+                image: 'assets/paginaAdministrador/lapiz.png',
+                text: 'Mostrar Materiales',
+                onPressed: () {
+                  Navigator.pushNamed(context, '/mostrarMateriales');
+                }),
               ],
             ),
             SizedBox(height: MediaQuery.of(context).size.height*0.2),
@@ -72,6 +75,14 @@ class GestionarAlumnos extends StatelessWidget {
                     text: 'Asignar tareas a alumnos',
                     onPressed: () {
                       Navigator.pushNamed(context, '/asignarTareas');
+                    }),
+                SizedBox(width: MediaQuery.of(context).size.width*0.1),
+
+                CustomButton(
+                    image: 'assets/paginaAdministrador/profesor.png',
+                    text: 'Peticiones de profesores',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/peticionesProfesores');
                     })
               ],
             )

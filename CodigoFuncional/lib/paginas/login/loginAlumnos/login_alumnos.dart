@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_sonrisa/password_alumnos.dart';
+import 'package:puzzle_sonrisa/paginas/login/loginAlumnos/password_alumnos.dart';
 
 class LoginAlumnos extends StatefulWidget {
   const LoginAlumnos({super.key});
@@ -44,7 +44,7 @@ class _LoginAlumnosState extends State<LoginAlumnos> {
             onPressed: () {
               Navigator.pushNamed(context, '/loginAdministrador');
             },
-            child: const Text('Iniciar Sesión como Administrador', ),
+            child: const Text('Iniciar Sesión como Administrador o Profesor', ),
           ),
         ],
       ),
