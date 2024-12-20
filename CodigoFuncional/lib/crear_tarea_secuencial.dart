@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:puzzle_sonrisa/describir_paso.dart';
+import 'package:http/http.dart' as http;
+import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class CrearTareaSecuencial extends StatefulWidget {
   @override
@@ -9,6 +14,8 @@ class CrearTareaSecuencial extends StatefulWidget {
 class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
   final TextEditingController tituloController = TextEditingController();
   final TextEditingController pasosController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  String imagenPrincipal = '';
 
   void _siguientePantalla() {
     int? pasos = int.tryParse(pasosController.text);
@@ -18,14 +25,63 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DescribirPaso(titulo: titulo, pasosTotales: pasos),
+          builder: (context) => DescribirPaso(
+              titulo: titulo,
+              pasosTotales: pasos,
+              imagenPrincipal: imagenPrincipal),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Por favor, introduce un título y un número válido de pasos")),
+        SnackBar(
+            content: Text(
+                "Por favor, introduce un título y un número válido de pasos")),
       );
     }
+  }
+
+  Future<String> _subirImagen(XFile imagen) async {
+    final url = Uri.parse(uriImage + '/upload');
+
+    try {
+      // Convertir la imagen a bytes
+      final bytes = await imagen.readAsBytes();
+      final String fileName = imagen.name;
+
+      // Realizar la solicitud POST
+      final response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'X-File-Name': fileName,
+          },
+          body: bytes);
+
+      // Verificar la respuesta
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return responseData[
+            'file_path']; // Devuelve la ruta del archivo como respuesta
+      } else {
+        print('Error al subir la imagen: ${response.statusCode}');
+        return ''; // Devolver cadena vacía en caso de error
+      }
+    } catch (e) {
+      print('Error: $e');
+      return ''; // Devolver cadena vacía en caso de error
+    }
+  }
+
+  Future<String> _agregarImagen() async {
+    final XFile? imagen = await _picker.pickImage(source: ImageSource.gallery);
+    String imagenPath = await _subirImagen(imagen!);
+
+    if (imagenPath != "") {
+      setState(() {
+        imagenPrincipal = imagenPath;
+      });
+    }
+
+    return imagenPath;
   }
 
   @override
@@ -87,6 +143,15 @@ class _CrearTareaSecuencialState extends State<CrearTareaSecuencial> {
                 ),
               ),
               SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: _agregarImagen,
+                child: Text('Agregar imagen'),
+              ),
+              // Mostrar la imagen elegida en el paso actual
+              if (imagenPrincipal != '')
+                Image.network(imagenPrincipal,
+                    height: 200, width: 200), // Mostrar imagen local
+              SizedBox(height: 8),
               SizedBox(
                 width: 120,
                 child: ElevatedButton(
