@@ -20,7 +20,6 @@ class _MostrarProfesoresState extends State<MostrarProfesores> {
   
   @override
   void initState() {
-    // TODO: implement initState
     _profesores = _fetchProfesores();
     super.initState();
   }
@@ -163,9 +162,6 @@ class _MostrarProfesoresState extends State<MostrarProfesores> {
                   });
                 }
               },
-              style: const ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 152, 196, 233)),
-              ),
               child: const Text('Crear profesor', style: TextStyle(color: Colors.black)),
             ),
           ),

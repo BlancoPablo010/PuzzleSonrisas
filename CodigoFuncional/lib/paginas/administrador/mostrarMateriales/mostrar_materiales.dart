@@ -20,7 +20,6 @@ class _MostrarMaterialesState extends State<MostrarMateriales> {
   
   @override
   void initState() {
-    // TODO: implement initState
     _materiales = _fetchMateriales();
     super.initState();
   }
@@ -160,9 +159,6 @@ class _MostrarMaterialesState extends State<MostrarMateriales> {
                   });
                 }
               },
-              style: const ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 152, 196, 233)),
-              ),
               child: const Text('Crear material', style: TextStyle(color: Colors.black)),
             ),
           ),

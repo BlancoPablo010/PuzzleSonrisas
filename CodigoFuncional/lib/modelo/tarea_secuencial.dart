@@ -3,7 +3,7 @@ class Tarea {
   String titulo;
   int numero_pasos;
   List<String> pasos;
-  String? imagenPrincipal;
+  String imagenPrincipal;
   List<String> imagenes;
 
   Tarea({
@@ -13,5 +13,7 @@ class Tarea {
     required this.pasos,
     String? imagenPrincipal, // Hacemos que este parámetro sea opcional
     List<String>? imagenes, // Hacemos que este parámetro sea opcional
-  }) : imagenes = imagenes ?? []; // Si no se pasa, inicializa como lista vacía
+
+  }) : imagenes = imagenes ?? [], // Si no se pasa, inicializa como lista vacía
+    imagenPrincipal = imagenPrincipal ?? ''; // Si no se pasa, inicializa como lista vacía
 }

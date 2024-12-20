@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:puzzle_sonrisa/describir_paso.dart';
+import 'package:puzzle_sonrisa/paginas/administrador/crearTareasSecuenciales/describir_paso.dart';
 import 'package:http/http.dart' as http;
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
