@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class MostrarTareaSecuencial extends StatefulWidget {
   final Tarea tarea;
 
-  MostrarTareaSecuencial({required this.tarea});
+  const MostrarTareaSecuencial({super.key, required this.tarea});
 
   @override
   _MostrarTareaSecuencialState createState() => _MostrarTareaSecuencialState();
@@ -50,7 +50,7 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -59,7 +59,7 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
         title: Text(
             
             '${widget.tarea.titulo} ${_currentStep + 1}/${widget.tarea.pasos.length}',
-            style: TextStyle(color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
         backgroundColor: fondoColor,
@@ -77,7 +77,7 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                 if (widget.tarea.imagenes.isNotEmpty && widget.tarea.imagenes[_currentStep] != "")
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 16.0),
+                    margin: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Image.network(
                       widget.tarea.imagenes[_currentStep], 
                       height: MediaQuery.of(context).size.height * 0.4,
@@ -85,8 +85,8 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                     ),
                   ),
                 Text(
-                  '${widget.tarea.pasos.isNotEmpty ? widget.tarea.pasos[_currentStep] : "No hay pasos disponibles"}',
-                  style: TextStyle(fontSize: 25),
+                  widget.tarea.pasos.isNotEmpty ? widget.tarea.pasos[_currentStep] : "No hay pasos disponibles",
+                  style: const TextStyle(fontSize: 25),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.2),
@@ -97,17 +97,17 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                     children: [
                       if (_currentStep > 0)
                         IconButton(
-                          icon: Icon(Icons.arrow_back, size: 30),
+                          icon: const Icon(Icons.arrow_back, size: 30),
                           onPressed: () {
                             setState(() {
                               _currentStep--;
                             });
                           },
                         ),
-                      Spacer(),
+                      const Spacer(),
                       if (_currentStep < widget.tarea.pasos.length - 1)
                         IconButton(
-                          icon: Icon(Icons.arrow_forward, size: 30),
+                          icon: const Icon(Icons.arrow_forward, size: 30),
                           onPressed: () {
                             setState(() {
                               _currentStep++;
@@ -116,7 +116,7 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                         ),
                       if (_currentStep == widget.tarea.pasos.length - 1)
                         IconButton(
-                          icon: Icon(Icons.check, size: 30),
+                          icon: const Icon(Icons.check, size: 30),
                           onPressed: () {
                             if (CurrentUser().rol == 'Alumno') {
                               _desasignarTarea(CurrentUser().id!, widget.tarea.id);

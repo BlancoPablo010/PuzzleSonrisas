@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class PasswordAlumnos extends StatefulWidget{
   final int user;
   
-  const PasswordAlumnos({Key? key, required this.user}) : super(key: key);
+  const PasswordAlumnos({super.key, required this.user});
   
 
 
@@ -32,7 +32,7 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
   }
 
   Future<void> _getPassword(int user) async {
-    final url = Uri.parse(uri + '/password/$user');
+    final url = Uri.parse('$uri/password/$user');
     try {
       final response = await http.get(
         url,
@@ -55,7 +55,7 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
   }
 
   Future<void> _login(BuildContext context, String usuario, String password) async {
-    final url = Uri.parse(uri + '/loginAlumno');
+    final url = Uri.parse('$uri/loginAlumno');
     try {
       final response = await http.post(
         url,
@@ -214,7 +214,7 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                       border: Border.all(color: Colors.black, width: 5),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: SizedBox(width: 250, height: 250),
+                    child: const SizedBox(width: 250, height: 250),
                   ),
                 ],
         
@@ -243,7 +243,7 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                       border: Border.all(color: Colors.black, width: 5),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: SizedBox(width: 250, height: 250),
+                    child: const SizedBox(width: 250, height: 250),
                   ),
                 ],
 
@@ -272,7 +272,7 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                       border: Border.all(color: Colors.black, width: 5),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: SizedBox(width: 250, height: 250),
+                    child: const SizedBox(width: 250, height: 250),
                   ),
                 ],
                 SizedBox(width: MediaQuery.of(context).size.width * 0.02),

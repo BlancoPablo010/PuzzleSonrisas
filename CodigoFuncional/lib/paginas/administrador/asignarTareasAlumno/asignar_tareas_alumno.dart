@@ -291,7 +291,6 @@ class _MostrarTareasSecuencialesState extends State<AsignarTareasAlumno> {
   
 
   void _asignarTarea(String idTarea) async {
-    print("Asignando tarea $idTarea a ${widget.idAlumno}");
     final url = Uri.parse(uri + '/alumno/${widget.idAlumno}/asignar_tarea');
     final token = CurrentUser().token;
     try {

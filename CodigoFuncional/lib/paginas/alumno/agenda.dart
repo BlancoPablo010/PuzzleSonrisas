@@ -80,7 +80,13 @@ class _AgendaState extends State<Agenda> {
               return const Center(child: Text('No se encontraron tareas'));
             } else {
               final tareas = snapshot.data!;
-              return  ListView.builder(
+              return  GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // Número de columnas
+                  crossAxisSpacing: 20, // Espacio horizontal entre celdas
+                  mainAxisSpacing: 20, // Espacio vertical entre celdas
+                  childAspectRatio: 2, // Relación ancho/alto más cuadrada
+                ),
                 itemCount: tareas.length,
                 itemBuilder: (context, index) {
                   final tareaJSON = tareas[index];
@@ -117,38 +123,37 @@ class _AgendaState extends State<Agenda> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(25),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 2,
-                              blurRadius: 5,
+                              blurRadius: 6,
                               offset: const Offset(0, 3),
                             ),
                           ],
                         ),
-                        child: ListTile(
-                          leading: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              tarea.titulo,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 30, // Tamaño más pequeño del texto
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
-                            child: const Icon(Icons.calendar_today, color: Colors.black),
-                          ),
-                          title: Text(
-                            tarea.titulo,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                            const SizedBox(height: 6), // Espacio reducido
+                            Image.network(tarea.imagenPrincipal, width: 100, height: 100),
+                            const SizedBox(height: 6), // Espacio reducido
+                            Text(
+                              'Pasos: ${tarea.numero_pasos}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 18, color: Colors.grey), // Subtítulo reducido
                             ),
-                          ),
-                          subtitle: Text(
-                            'Pasos: ${tarea.numero_pasos}',
-                            style: const TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
+                          ],
                         ),
                       ),
                     ),

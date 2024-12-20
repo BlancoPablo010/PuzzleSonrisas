@@ -20,7 +20,7 @@ class _CrearMaterialState extends State<CrearMaterial> {
 
   Future<String> _subirImagen(XFile imagen) async {
     
-    final url = Uri.parse(uriImage + '/upload');
+    final url = Uri.parse('$uriImage/upload');
 
     try {
       // Convertir la imagen a bytes

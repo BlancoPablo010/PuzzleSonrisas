@@ -25,7 +25,7 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
   }
 
   Future<List<Map<String, dynamic>>> _fetchTareas() async {
-    final url = Uri.parse(uri + '/tareas');
+    final url = Uri.parse('$uri/tareas');
     final token = CurrentUser().token;
     try {
       final response = await http.get(
@@ -58,19 +58,19 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
       );
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Tarea eliminada con éxito.')),
+          const SnackBar(content: Text('Tarea eliminada con éxito.')),
         );
         setState(() {
           _tareas = _fetchTareas(); // Recargar las tareas
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al eliminar la tarea.')),
+          const SnackBar(content: Text('Error al eliminar la tarea.')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error de conexión con el servidor.')),
+        const SnackBar(content: Text('Error de conexión con el servidor.')),
       );
     }
   }
@@ -85,11 +85,11 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
         future: _tareas,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No se encontraron tareas'));
+            return const Center(child: Text('No se encontraron tareas'));
           } else {
             final tareas = snapshot.data!;
             return ListView.builder(
@@ -133,7 +133,7 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                           Expanded(
                             child: Text(
                               tarea.titulo,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -146,11 +146,11 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                                   _eliminarTarea(context, tarea.id);
                                 },
                                 style: OutlinedButton.styleFrom(
-                                  minimumSize: Size(70, 36),
+                                  minimumSize: const Size(70, 36),
                                 ),
-                                child: Text('Borrar'),
+                                child: const Text('Borrar'),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               ElevatedButton(
                                 onPressed: () async {
                                   final resultado = await Navigator.push(
@@ -169,9 +169,9 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,
-                                  minimumSize: Size(70, 36),
+                                  minimumSize: const Size(70, 36),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Editar',
                                   style: TextStyle(color: Colors.white),
                                 ),

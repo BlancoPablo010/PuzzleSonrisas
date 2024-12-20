@@ -5,12 +5,12 @@ class CustomButton extends StatelessWidget {
   final String text;
   final String image;
 
-  CustomButton({
-    Key? key,
+  const CustomButton({
+    super.key,
     required this.onPressed,
     required this.text,
     required this.image,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
