@@ -34,5 +34,20 @@ def upload_image():
     # Devolver una respuesta exitosa
     return jsonify({'message': 'Image uploaded successfully', 'file_path': file_path}), 201
 
+@app.route('/delete', methods=['DELETE'])
+def delete_image():
+    filename = request.headers.get('X-File-Name', 'uploaded_image.png')
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    # Asegurarse de que el archivo exista
+    if not os.path.exists(file_path):
+        return jsonify({'error': 'File not found'}), 404
+
+    # Eliminar el archivo del sistema de archivos
+    os.remove(file_path)
+
+    # Devolver una respuesta exitosa
+    return jsonify({'message': 'Image deleted successfully', 'file_path': file_path}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
