@@ -6,7 +6,16 @@ import 'dart:convert';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class MostrarAlumnos extends StatelessWidget {
-  const MostrarAlumnos({super.key});
+   MostrarAlumnos({super.key});
+
+  final List<Map<String, dynamic>> pictogramasUsuario= [
+    {'id': 1, 'ruta': 'assets/pictogramasUsuario/cerdito.png'},
+    {'id': 2, 'ruta': 'assets/pictogramasUsuario/dragón.png'},
+    {'id': 3, 'ruta': 'assets/pictogramasUsuario/El gato con botas.png'},
+    {'id': 4, 'ruta': 'assets/pictogramasUsuario/genio.png'},
+    {'id': 5, 'ruta': 'assets/pictogramasUsuario/hada.png'},
+    {'id': 6, 'ruta': 'assets/pictogramasUsuario/sirena.png'},
+  ];
 
   Future<List<Map<String, dynamic>>> _fetchAlumnos() async {
     final url = Uri.parse(uri + '/alumnos');
@@ -89,7 +98,9 @@ class MostrarAlumnos extends StatelessWidget {
                         CircleAvatar(
                           radius: 40,
                           backgroundColor: Colors.grey.shade400,
-                          child: Icon(Icons.person, size: 40, color: Colors.white),
+                          child: Image.asset(
+                            pictogramasUsuario[int.parse(alumno['usuario']) - 1]['ruta'],
+                          ),
                         ),
                         SizedBox(width: 16),
                         Expanded(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/modelo/alumno.dart';
 
 // Modify the student data
+// ignore: must_be_immutable
 class ModificarAlumnos extends StatelessWidget {
   final Alumno alumno;
 

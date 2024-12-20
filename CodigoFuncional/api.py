@@ -1,12 +1,11 @@
 import os
+from bson import ObjectId
 from flask import Flask, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from pymongo import MongoClient
 from datetime import timedelta
 from flask_cors import CORS
-import base64
-
 
 app = Flask(__name__)
 
@@ -62,7 +61,7 @@ def loginAlumno():
 
     if user and (user["password"] == data["password"]):
         access_token = create_access_token(identity=data["usuario"])
-        return jsonify(access_token=access_token, rol="Alumno"), 200
+        return jsonify(access_token=access_token, rol="Alumno", _id=str(user["_id"])), 200
 
     return jsonify({"error": "Credenciales inválidas"}), 401
 
@@ -92,8 +91,16 @@ def create_alumno():
 @app.route("/alumnos", methods=["GET"])
 @jwt_required()
 def get_alumnos():
-    alumnos = usuarios_collection.find({"rol": "Alumno"}, {"_id": 0, "password": 0})
-    return jsonify(list(alumnos)), 200
+    usuarios_collection = db["usuarios"]
+    # Encuentra todos los usuarios con el rol de "Alumno"
+    alumnos = list(usuarios_collection.find({"rol": "Alumno"}))
+    
+    # Transforma los documentos a un formato JSON serializable
+    for alumno in alumnos:
+        alumno['_id'] = str(alumno['_id'])  # Convierte ObjectId a cadena
+        alumno['tareas_asignadas'] = [str(tarea_id) for tarea_id in alumno['tareas_asignadas']]  # Convierte ObjectId de tareas a cadena
+    
+    return jsonify(alumnos), 200
 
 @app.route("/password/<usuario>", methods=["GET"])
 def get_password(usuario):
@@ -127,10 +134,6 @@ def create_tarea():
     for paso in data["pasos"]:
         if "numero_paso" not in paso or "accion" not in paso or "imagen" not in paso:
             return jsonify({"error": "Cada paso debe contener 'numero_paso', 'accion', y 'imagen'"}), 400
-        
-        if isinstance(paso["imagen"], str):
-            paso["imagen"] = base64.b64decode(paso["imagen"]) 
-            
             
     tarea = {
         "titulo": data["titulo"],
@@ -147,14 +150,19 @@ def create_tarea():
 @jwt_required()
 def get_tareas():
     tareas_collection = db["tareas"]
-    tareas = tareas_collection.find({}, {"_id": 0})
+    tareas = list(tareas_collection.find()) 
+    
+    for tarea in tareas:
+        tarea['_id'] = str(tarea['_id'])  
+    
     return jsonify(list(tareas)), 200
 
+
 # Delete a specific task
-@app.route("/tareas/<titulo>", methods=["DELETE"])
+@app.route("/tareas/<id>", methods=["DELETE"])
 @jwt_required()
-def delete_tarea(titulo):
-    result = tareas_collection.delete_one({"titulo": titulo})
+def delete_tarea(id):
+    result = tareas_collection.delete_one({"_id": ObjectId(id)})
     if result.deleted_count == 0:
         return jsonify({"error": "No se encontró la tarea"}), 404
 
@@ -216,34 +224,48 @@ def add_fecha_limite(tarea_id, fecha_limite):
     return jsonify({"message": "Fecha límite añadida con éxito"}), 200
 
 # Add a task to a specific student
-@app.route("/alumno/<usuario>/tareas_asignadas", methods=["POST"])
+@app.route("/alumno/<id_alumno>/asignar_tarea", methods=["POST"])
 @jwt_required()
-def add_tarea_alumno(usuario, tarea_id):
+def add_tarea_alumno(id_alumno):
+    data = request.get_json()
+    if "id_tarea" not in data or "id_alumno" not in data:
+        return jsonify({"error": "Faltan campos requeridos"}), 400
+    id_tarea = data["id_tarea"]
+
     tareas_collection = db["tareas"]
-    tarea = tareas_collection.find_one({"_id": tarea_id})
+    tarea = tareas_collection.find_one({"_id": ObjectId(id_tarea)})
     if not tarea:
         return jsonify({"error": "No se encontró la tarea"}), 404
 
-    usuarios_collection.update_one({"usuario": usuario, "rol": "Alumno"}, {"$push": {"tareas_asignadas": tarea_id}})
+    usuarios_collection.update_one({"_id": ObjectId(id_alumno), "rol": "Alumno"}, {"$push": {"tareas_asignadas": ObjectId(id_tarea)}})
     return jsonify({"message": "Tarea añadida con éxito"}), 200
 
 # Delete a task from a specific student
-@app.route("/alumno/<usuario>/tarea/<tarea_id>", methods=["DELETE"])
+@app.route("/alumno/<id_usuario>/desasignar_tarea", methods=["DELETE"])
 @jwt_required()
-def delete_tarea_alumno(usuario, tarea_id):
-    usuarios_collection.update_one({"usuario": usuario, "rol": "Alumno"}, {"$pull": {"tareas_asignadas": tarea_id}})
+def delete_tarea_alumno(id_usuario):
+
+    data = request.get_json()
+    if "id_tarea" not in data:
+        return jsonify({"error": "Faltan campos requeridos"}), 400
+    id_tarea = data["id_tarea"]
+    usuarios_collection.update_one({"_id": ObjectId(id_usuario), "rol": "Alumno"}, {"$pull": {"tareas_asignadas": ObjectId(id_tarea)}})
     return jsonify({"message": "Tarea eliminada con éxito"}), 200
 
 # Show the tasks of a specific student
-@app.route("/alumno/<usuario>/tareas_asignadas", methods=["GET"])
+@app.route("/alumno/<id>/tareas_asignadas", methods=["GET"])
 @jwt_required()
-def get_tareas_alumno(usuario):
-    alumno = usuarios_collection.find_one({"usuario": usuario, "rol": "Alumno"}, {"_id": 0, "password": 0})
+def get_tareas_alumno(id):
+    alumno = usuarios_collection.find_one({"_id": ObjectId(id), "rol": "Alumno"}, {"_id": 0, "password": 0})
     if not alumno:
         return jsonify({"error": "Alumno no encontrado"}), 404
 
     tareas_collection = db["tareas"]
-    tareas = tareas_collection.find({"_id": {"$in": alumno["tareas_asignadas"]}}, {"_id": 0})
+    tareas = list(tareas_collection.find({"_id": {"$in": alumno["tareas_asignadas"]}}))
+
+    for tarea in tareas:
+        tarea['_id'] = str(tarea['_id'])
+
     return jsonify(list(tareas)), 200
 
 #Update a task
