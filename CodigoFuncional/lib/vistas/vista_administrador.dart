@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_sonrisa/componentes/boton.dart';
+import 'package:puzzle_sonrisa/widgets/boton.dart';
 
 class VistaAdministrador extends StatelessWidget {
   VistaAdministrador({super.key});
@@ -75,6 +75,14 @@ class VistaAdministrador extends StatelessWidget {
                     text: 'Asignar tareas a alumnos',
                     onPressed: () {
                       Navigator.pushNamed(context, '/asignarTareas');
+                    }),
+                SizedBox(width: MediaQuery.of(context).size.width*0.1),
+
+                CustomButton(
+                    image: 'assets/paginaAdministrador/profesor.png',
+                    text: 'Peticiones de profesores',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/peticionesProfesores');
                     })
               ],
             )

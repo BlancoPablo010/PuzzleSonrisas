@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_sonrisa/describir_paso.dart';
+import 'package:puzzle_sonrisa/paginas/administrador/crearTareasSecuenciales/describir_paso.dart';
 
 class CrearTareaSecuencial extends StatefulWidget {
   @override

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart';
 import 'dart:convert';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
-import 'package:puzzle_sonrisa/mostrar_tarea_secuencial.dart';
+import 'package:puzzle_sonrisa/paginas/administrador/editarTareasSecuenciales/mostrar_tarea_secuencial.dart';
 
 class MostrarTareasSecuenciales extends StatefulWidget {
   const MostrarTareasSecuenciales({super.key});

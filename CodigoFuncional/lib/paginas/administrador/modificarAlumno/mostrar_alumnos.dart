@@ -132,16 +132,6 @@ class MostrarAlumnos extends StatelessWidget {
                               ),
                               child: Text('Eliminar', style: TextStyle(color: Colors.white)),
                             ),
-                            SizedBox(height: 8),
-                            OutlinedButton(
-                              onPressed: () {
-                                // Navigate to the modify student page
-                              },
-                              style: OutlinedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              ),
-                              child: Text('Modificar datos', style: TextStyle(color: Colors.black)),
-                            ),
                           ],
                         ),
                       ],

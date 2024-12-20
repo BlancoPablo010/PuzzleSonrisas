@@ -52,7 +52,7 @@ def login():
 
     if user and bcrypt.check_password_hash(user["password"], data["password"]):
         access_token = create_access_token(identity=data["usuario"])
-        return jsonify(access_token=access_token, rol=user["rol"]), 200
+        return jsonify(access_token=access_token, rol=user["rol"], _id=str(user["_id"])), 200
 
     return jsonify({"error": "Credenciales inválidas"}), 401
 
@@ -282,7 +282,7 @@ def update_tarea(tarea_id):
     if not pasos:
         return jsonify({"error": "Los pasos son obligatorios"}), 400
 
-    result = tareas_collection.update_one({"_id": tarea_id}, {"$set": {"pasos": pasos}})
+    result = tareas_collection.update_one({"_id": ObjectId(tarea_id)}, {"$set": {"pasos": pasos}})
 
     if result.matched_count == 0:
         return jsonify({"error": "No se encontró la tarea"}), 404
@@ -323,6 +323,16 @@ def get_profesores():
     
     return jsonify(profesores), 200
 
+@app.route("/profesores/<id>", methods=["GET"])
+@jwt_required()
+def get_profesor(id):
+    profesor = usuarios_collection.find_one({"_id": ObjectId(id), "rol": "Profesor"})
+    if not profesor:
+        return jsonify({"error": "No se encontró el profesor"}), 404
+
+    profesor['_id'] = str(profesor['_id'])
+    return jsonify(profesor), 200
+
 @app.route("/profesores/<id>", methods=["DELETE"])
 @jwt_required()
 def delete_profesor(id):
@@ -359,6 +369,16 @@ def get_materiales():
     
     return jsonify(list(materiales)), 200
 
+@app.route("/materiales/<id>", methods=["GET"])
+@jwt_required()
+def get_material(id):
+    material = materiales_collection.find_one({"_id": ObjectId(id)})
+    if not material:
+        return jsonify({"error": "No se encontró el material"}), 404
+
+    material['_id'] = str(material['_id'])
+    return jsonify(material), 200
+
 @app.route("/materiales/<id>", methods=["DELETE"])
 @jwt_required()
 def delete_material(id):
@@ -372,21 +392,20 @@ def delete_material(id):
 @jwt_required()
 def create_peticion():
     data = request.get_json()
-    if "titulo" not in data or "materiales" not in data:
-        return jsonify({"error": "Faltan campos requeridos"}), 400
     
-    for material in data["materiales"]:
-        if "id_material" not in material:
-            return jsonify({"error": "Cada material debe tener 'id_material'"}), 400
+    if "titulo" not in data or "materiales" not in data or "profesor" not in data or "fecha" not in data:
+        return jsonify({"error": "Faltan campos requeridos"}), 400
     
     peticion_material = {
         "titulo": data["titulo"],
-        "materiales": data["materiales"]
+        "materiales": data["materiales"],
+        "profesor": data["profesor"],
+        "fecha": data["fecha"]
     }
 
-    peticion_id = peticiones_material_collection.insert_one(peticion_material).inserted_id
+    peticiones_material_collection.insert_one(peticion_material)
     
-    return jsonify({"message": "Petición creada con éxito", "peticion_id": str(peticion_id)}), 201
+    return jsonify({'message': 'Peticion creada'}), 201
 
 @app.route("/peticiones", methods=["GET"])
 @jwt_required()
@@ -394,7 +413,7 @@ def get_peticiones():
     peticiones = list(peticiones_material_collection.find()) 
     
     for peticion in peticiones:
-        peticion['_id'] = str(peticion['_id'])  
+        peticion['_id'] = str(peticion['_id']) 
     
     return jsonify(list(peticiones)), 200
 

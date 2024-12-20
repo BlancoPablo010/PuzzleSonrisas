@@ -55,27 +55,31 @@ class _PedirMaterialesState extends State<PedirMateriales> {
 
   Future<void> _pedirMateriales() async {
     final url = Uri.parse(uri + '/peticion_material');
-    final token = CurrentUser().token!;
+    final token = CurrentUser().token;
     try {
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
-          'body': json.encode({
-            'titulo': 'Peticion de materiales',
-            'materiales': _idMaterialesSeleccionados,
-          }),
         },
+        body: json.encode(
+          {
+            'titulo': 'Pedido de materiales',
+            'materiales': _idMaterialesSeleccionados,
+            'profesor': CurrentUser().id,
+            'fecha': DateTime.now().toIso8601String(),
+          },
+        ),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         Navigator.pop(context);
         const SnackBar(content: Text('Materiales pedidos con éxito.'));
       } else {
-        throw Exception('Failed to create peticion: ${response.statusCode} + ${response.body}');
+        throw Exception('Failed to create peticion: ${response.statusCode} + ${response.request!.headers['body']}');
       }
     } catch (e) {
-      throw Exception('Error fetching materiales: $e');
+      throw Exception('Error creando peticion de material: $e');
     }
   }
  
@@ -131,9 +135,9 @@ class _PedirMaterialesState extends State<PedirMateriales> {
                           setState(() {
                             materiales[index]['checked'] = value;
                             if (value == true) {
-                              _idMaterialesSeleccionados.add({'id_material': materiales[index]['_id']});
+                              _idMaterialesSeleccionados.add({'material': materiales[index]['_id']});
                             } else {
-                              _idMaterialesSeleccionados.remove({'id_material': materiales[index]['_id']});
+                              _idMaterialesSeleccionados.remove({'material': materiales[index]['_id']});
                             }
                           });
                         },

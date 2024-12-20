@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
-class LoginNormal extends StatelessWidget {
-  const LoginNormal({super.key});
+class Login extends StatelessWidget {
+  const Login({super.key});
 
   
 
@@ -21,6 +21,7 @@ class LoginNormal extends StatelessWidget {
         final responseData = json.decode(response.body);
         CurrentUser().token = responseData['access_token'];
         CurrentUser().rol = responseData['rol'];
+        CurrentUser().id = responseData['_id'];
 
         if (CurrentUser().rol == 'Administrador') {
             Navigator.pushNamed(context, '/vistaAdministrador');
@@ -67,31 +68,38 @@ class LoginNormal extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50),
-            TextField(
-              controller: usuarioController,
-              decoration: InputDecoration(
-                labelText: 'Nombre de usuario',
-                prefixIcon: const Icon(Icons.mail),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5,
+
+              child: TextField(
+                controller: usuarioController,
+                decoration: InputDecoration(
+                  labelText: 'Nombre de usuario',
+                  prefixIcon: const Icon(Icons.mail),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                prefixIcon: const Icon(Icons.lock),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Contraseña',
+                  prefixIcon: const Icon(Icons.lock),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 40),
             SizedBox(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width * 0.5,
               child: ElevatedButton(
                 onPressed: () {
                   _login(context, usuarioController.text, passwordController.text);
@@ -105,13 +113,6 @@ class LoginNormal extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                // Ask for help action
-              },
-              child: const Text('¿Problemas para acceder? Pida ayuda.'),
             ),
           ],
         ),

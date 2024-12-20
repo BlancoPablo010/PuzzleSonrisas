@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
-import 'mostrar_tarea_secuencial.dart'; // Importa la pantalla MostrarTareaSecuencial
+import '../administrador/editarTareasSecuenciales/mostrar_tarea_secuencial.dart'; // Importa la pantalla MostrarTareaSecuencial
 import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart'; // Importa la clase Tarea
 import 'package:http/http.dart' as http;
 

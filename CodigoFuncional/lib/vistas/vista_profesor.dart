@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_sonrisa/componentes/boton.dart';
+import 'package:puzzle_sonrisa/widgets/boton.dart';
 
 class VistaProfesor extends StatelessWidget {
   VistaProfesor({super.key});
