@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart';
+import 'package:puzzle_sonrisa/modelo/uri.dart';
+import 'package:http/http.dart' as http;
+
 
 class MostrarTareaSecuencial extends StatefulWidget {
   final Tarea tarea;
@@ -12,6 +18,30 @@ class MostrarTareaSecuencial extends StatefulWidget {
 
 class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
   int _currentStep = 0;
+
+  Future<void> _desasignarTarea(String idUsuario, String idTarea) async {
+    final url = Uri.parse(uri + '/alumno/${idUsuario}/desasignar_tarea');
+    final token = CurrentUser().token;
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: json.encode({
+          'id_tarea': idTarea,
+        }),
+      );
+      if (response.statusCode == 200) {
+        Navigator.pop(context, 'Tarea desasignada');
+      } else {
+        throw Exception('Failed to desasignar tarea: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error desasignar tarea: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +118,12 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                         IconButton(
                           icon: const Icon(Icons.check, size: 30),
                           onPressed: () {
-                            Navigator.pop(context);
+                            if (CurrentUser().rol == 'Alumno') {
+                              _desasignarTarea(CurrentUser().id!, widget.tarea.id);
+                            }
+                            else {
+                              Navigator.pop(context);
+                            }
                           },
                         ),
                     ],

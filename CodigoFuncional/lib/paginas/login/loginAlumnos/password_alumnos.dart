@@ -66,8 +66,9 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
         final responseData = json.decode(response.body);
         CurrentUser().rol = responseData['rol'];
         CurrentUser().token = responseData['access_token'];
+        CurrentUser().id = responseData['_id'];
 
-        Navigator.pushNamed(context, '/agenda');
+        Navigator.pushNamed(context, '/vistaAlumno');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login fallido: Credenciales incorrectas.')),

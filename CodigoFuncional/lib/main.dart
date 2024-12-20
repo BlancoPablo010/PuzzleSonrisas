@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_sonrisa/app.dart';
+import 'package:puzzle_sonrisa/rutas/app.dart';
 
 
 void main() {

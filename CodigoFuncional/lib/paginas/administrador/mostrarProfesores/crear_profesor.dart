@@ -6,7 +6,8 @@ import 'package:puzzle_sonrisa/modelo/current_user.dart';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 
-class CrearAlumno extends StatelessWidget {
+// ignore: must_be_immutable
+class CrearProfesor extends StatelessWidget {
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController apellidosController = TextEditingController();
   final TextEditingController usuarioController = TextEditingController();
@@ -15,10 +16,10 @@ class CrearAlumno extends StatelessWidget {
 
   String? tipoPreferencia;
 
-  CrearAlumno({super.key});
+  CrearProfesor({super.key});
 
   Future<void> _crearAlumno(BuildContext context) async {
-    final url = Uri.parse('$uri/alumno');
+    final url = Uri.parse(uri + '/profesor');
     final token = 'Bearer ${CurrentUser().token}';
     try {
       final response = await http.post(
@@ -32,18 +33,16 @@ class CrearAlumno extends StatelessWidget {
           'password': contrasenaController.text,
           'nombre': nombreController.text,
           'apellidos': apellidosController.text,
-          'preferencia': tipoPreferencia,
-
         }),
       );
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Alumno creado con éxito.')),
+          const SnackBar(content: Text('Profesor creado con éxito.')),
         );
-        Navigator.pop(context);
+        Navigator.pop(context, 'Profesor creado');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al crear el alumno.')),
+          const SnackBar(content: Text('Error al crear el profesor.')),
         );
       }
     } catch (e) {
@@ -63,7 +62,7 @@ class CrearAlumno extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Crear Alumno'),
+        title: const Text('Crear Profesor'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -94,29 +93,6 @@ class CrearAlumno extends StatelessWidget {
                   ),
                 ),
               ),
-              const Text(
-                'Preferencia',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                hint: const Text('Selecciona la más conveniente'),
-                value: tipoPreferencia,
-                onChanged: (String? newValue) {
-                  tipoPreferencia = newValue;
-                },
-                items: <String>['Visual', 'Auditiva', 'Motora']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
               const SizedBox(height: 8),
               const Text(
                 'Datos de inicio de sesión',
@@ -125,7 +101,7 @@ class CrearAlumno extends StatelessWidget {
               TextField(
                 controller: usuarioController,
                 decoration: InputDecoration(
-                  hintText: 'Introduce el usuario con el que el alumno entrará en la aplicación',
+                  hintText: 'Introduce el usuario con el que el profesor entrará en la aplicación',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -135,7 +111,7 @@ class CrearAlumno extends StatelessWidget {
               TextField(
                 controller: contrasenaController,
                 decoration: InputDecoration(
-                  hintText: 'Introduce la contraseña con la que el alumno entrará en la aplicación',
+                  hintText: 'Introduce la contraseña con la que el profesor entrará en la aplicación',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -152,7 +128,6 @@ class CrearAlumno extends StatelessWidget {
                         nombreController.clear();
                         usuarioController.clear();
                         contrasenaController.clear();
-                        tipoPreferencia = null;
                       },
                       child: const Text('Vaciar'),
                     ),
