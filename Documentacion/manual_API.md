@@ -9,11 +9,11 @@ La API está alojada en un servidor de Azure y puede ser accedida mediante el si
 ## Ejecución
 Puedes realizar pruebas y consumir sus servicios utilizando la URL base proporcionada.
 
-Nota: Para operaciones protegidas, asegúrate de incluir el token JWT en los encabezados de la solicitud como:
+Para operaciones protegidas, asegúrate de incluir el token JWT en los encabezados de la solicitud como:
 
-makefile
-Copiar código
+```http
 Authorization: Bearer <tu_token>
+```
 
 Para ello deberás tener una cuenta registrada en la api, una vez hecho esto recibirás el token de autenticación JWT que podrás incluir en los encabezados.
 
