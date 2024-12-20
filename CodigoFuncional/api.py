@@ -127,7 +127,7 @@ def delete_alumno(usuario):
 def create_tarea():
     data = request.get_json()
     
-    if "titulo" not in data or "numero_pasos" not in data or "pasos" not in data:
+    if "titulo" not in data or "numero_pasos" not in data or "pasos" not in data or "imagen_principal" not in data:
         return jsonify({"error": "Faltan campos requeridos"}), 400
     
     if data["numero_pasos"] != len(data["pasos"]):
@@ -140,7 +140,8 @@ def create_tarea():
     tarea = {
         "titulo": data["titulo"],
         "numero_pasos": data["numero_pasos"],
-        "pasos": data["pasos"]
+        "pasos": data["pasos"],
+        "imagen_principal": data["imagen_principal"],
     }
     
     # Insertar la tarea en la base de datos
@@ -278,11 +279,24 @@ def update_tarea(tarea_id):
     if not data:
         return jsonify({"error": "No se proporcionó ningún dato para actualizar"}), 400
 
+    titulo = data.get("titulo")
+    numero_pasos = data.get("numero_pasos")
     pasos = data.get("pasos")
-    if not pasos:
-        return jsonify({"error": "Los pasos son obligatorios"}), 400
 
-    result = tareas_collection.update_one({"_id": ObjectId(tarea_id)}, {"$set": {"pasos": pasos}})
+    if not pasos and not titulo and not numero_pasos:
+        return jsonify({"error": "Debe proporcionar al menos un campo para actualizar"}), 400
+
+    # Construir el diccionario con los campos a actualizar
+    update_fields = {}
+    if titulo:
+        update_fields["titulo"] = titulo
+    if numero_pasos:
+        update_fields["numero_pasos"] = numero_pasos
+    if pasos:
+        update_fields["pasos"] = pasos
+    
+    # Actualizar la tarea en la base de datos
+    result = tareas_collection.update_one({"_id": ObjectId(tarea_id)}, {"$set": update_fields})
 
     if result.matched_count == 0:
         return jsonify({"error": "No se encontró la tarea"}), 404

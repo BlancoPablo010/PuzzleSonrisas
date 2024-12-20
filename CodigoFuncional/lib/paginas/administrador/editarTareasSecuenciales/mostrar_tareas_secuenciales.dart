@@ -4,13 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart';
 import 'dart:convert';
 import 'package:puzzle_sonrisa/modelo/uri.dart';
-import 'package:puzzle_sonrisa/paginas/administrador/editarTareasSecuenciales/mostrar_tarea_secuencial.dart';
+import 'package:puzzle_sonrisa/mostrar_tarea_secuencial.dart';
+import 'package:puzzle_sonrisa/modificar_tarea_secuencial.dart';
 
 class MostrarTareasSecuenciales extends StatefulWidget {
   const MostrarTareasSecuenciales({super.key});
 
   @override
-  _MostrarTareasSecuencialesState createState() => _MostrarTareasSecuencialesState();
+  _MostrarTareasSecuencialesState createState() =>
+      _MostrarTareasSecuencialesState();
 }
 
 class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
@@ -35,7 +37,9 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
       );
       if (response.statusCode == 200) {
         List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => data as Map<String, dynamic>).toList();
+        return responseData
+            .map((data) => data as Map<String, dynamic>)
+            .toList();
       } else {
         throw Exception('Failed to load tareas: ${response.statusCode}');
       }
@@ -50,10 +54,7 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
     try {
       final response = await http.delete(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
       );
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -98,19 +99,27 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                 List<String> pasos = [];
                 List<String> imagenes = [];
                 for (int i = 0; i < (tareaJSON['numero_pasos'] as int); i++) {
-                    pasos.add(tareaJSON['pasos'][i]['accion']);
-                    if (tareaJSON['pasos'][i]['imagen'] != '') {
-
-                      imagenes.add(tareaJSON['pasos'][i]['imagen']);
-                    }
-                  
+                  pasos.add(tareaJSON['pasos'][i]['accion']);
+                  if (tareaJSON['pasos'][i]['imagen'] != '') {
+                    imagenes.add(tareaJSON['pasos'][i]['imagen']);
+                  }
                 }
-                final tarea = Tarea(id: tareaJSON['_id'], titulo: tareaJSON['titulo'], numero_pasos: tareaJSON['numero_pasos'] as int, pasos: pasos, imagenes: imagenes);
+                final tarea = Tarea(
+                    id: tareaJSON['_id'],
+                    titulo: tareaJSON['titulo'],
+                    numero_pasos: tareaJSON['numero_pasos'] as int,
+                    pasos: pasos,
+                    imagenes: imagenes);
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
                   child: InkWell(
                     onTap: () => {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MostrarTareaSecuencial(tarea: tarea),
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MostrarTareaSecuencial(tarea: tarea),
                           ))
                     },
                     child: Container(
@@ -143,8 +152,20 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
                               ),
                               SizedBox(width: 8),
                               ElevatedButton(
-                                onPressed: () {
-                                   // TODO: Navigate to ModificarTareaSecuencial
+                                onPressed: () async {
+                                  final resultado = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ModificarTareaSecuencial(
+                                              tarea: tarea),
+                                    ),
+                                  );
+                                  if (resultado != null && resultado) {
+                                    setState(() {
+                                      _tareas = _fetchTareas();
+                                    });
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,
@@ -169,4 +190,4 @@ class _MostrarTareasSecuencialesState extends State<MostrarTareasSecuenciales> {
       ),
     );
   }
-}                 
+}

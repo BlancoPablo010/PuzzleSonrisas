@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_sonrisa/modelo/tarea_secuencial.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'package:puzzle_sonrisa/modelo/current_user.dart';
+import 'package:puzzle_sonrisa/modelo/uri.dart';
 
 class ModificarTareaSecuencial extends StatefulWidget {
   final Tarea tarea;
@@ -7,12 +12,14 @@ class ModificarTareaSecuencial extends StatefulWidget {
   ModificarTareaSecuencial({required this.tarea});
 
   @override
-  _ModificarTareaSecuencialState createState() => _ModificarTareaSecuencialState();
+  _ModificarTareaSecuencialState createState() =>
+      _ModificarTareaSecuencialState();
 }
 
 class _ModificarTareaSecuencialState extends State<ModificarTareaSecuencial> {
   late TextEditingController tituloController;
   late List<TextEditingController> pasosControllers;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -24,6 +31,10 @@ class _ModificarTareaSecuencialState extends State<ModificarTareaSecuencial> {
     pasosControllers = widget.tarea.pasos
         .map((paso) => TextEditingController(text: paso))
         .toList();
+    // Add an empty image controller for each step
+    while (widget.tarea.imagenes.length < widget.tarea.pasos.length) {
+      widget.tarea.imagenes.add('');
+    }
   }
 
   @override
@@ -34,6 +45,125 @@ class _ModificarTareaSecuencialState extends State<ModificarTareaSecuencial> {
       controller.dispose();
     }
     super.dispose();
+  }
+
+  // Metodo para subir una imagen
+  Future<String> _subirImagen(XFile imagen) async {
+    final url = Uri.parse(uriImage + '/upload');
+
+    try {
+      // Convertir la imagen a bytes
+      final bytes = await imagen.readAsBytes();
+      final String fileName = imagen.name;
+
+      // Realizar la solicitud POST
+      final response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'X-File-Name': fileName,
+          },
+          body: bytes);
+
+      // Verificar la respuesta
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return responseData[
+            'file_path']; // Devuelve la ruta del archivo como respuesta
+      } else {
+        print('Error al subir la imagen: ${response.statusCode}');
+        return ''; // Devolver cadena vacía en caso de error
+      }
+    } catch (e) {
+      print('Error: $e');
+      return ''; // Devolver cadena vacía en caso de error
+    }
+  }
+
+  // Metodo para añadir un paso
+  void _agregarPaso() {
+    setState(() {
+      pasosControllers.add(TextEditingController());
+      widget.tarea.pasos.add('');
+      widget.tarea.imagenes.add('');
+      widget.tarea.numero_pasos++;
+    });
+  }
+
+  // Metodo para eliminar un paso
+  void _eliminarPaso(int index) {
+    setState(() {
+      pasosControllers.removeAt(index);
+      widget.tarea.pasos.removeAt(index);
+      widget.tarea.imagenes.removeAt(index);
+      widget.tarea.numero_pasos--;
+    });
+  }
+
+  // Metodo para seleccionar una imagen
+  Future<void> _seleccionarImagen(int index) async {
+    final XFile? imagen = await _picker.pickImage(source: ImageSource.gallery);
+    if (imagen != null) {
+      final String imagePath = await _subirImagen(imagen);
+      if (imagePath.isNotEmpty) {
+        setState(() {
+          widget.tarea.imagenes[index] = imagePath;
+        });
+      }
+    }
+  }
+
+  // Metodo para guardar los cambios
+  void _guardarCambios() async {
+    // Construye los pasos actualizados
+    final List<Map<String, dynamic>> pasosActualizados = [];
+    for (int i = 0; i < pasosControllers.length; i++) {
+      pasosActualizados.add({
+        "numero_paso": i + 1,
+        "accion": pasosControllers[i].text,
+        "imagen":
+            i < widget.tarea.imagenes.length ? widget.tarea.imagenes[i] : '',
+      });
+    }
+
+    final url = Uri.parse('$uri/tarea/${widget.tarea.id}');
+    final token = CurrentUser().token;
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          "titulo": tituloController.text,
+          "numero_pasos": pasosControllers.length,
+          "pasos": pasosActualizados,
+        }),
+      );
+      print('Datos enviados: ${json.encode({
+            "titulo": tituloController.text,
+            "numero_pasos": pasosControllers.length,
+            "pasos": pasosActualizados,
+          })}');
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Tarea actualizada con éxito')),
+        );
+        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Error al actualizar la tarea. Código: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de conexión: $e')),
+      );
+    }
   }
 
   @override
@@ -54,53 +184,60 @@ class _ModificarTareaSecuencialState extends State<ModificarTareaSecuencial> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Text(
-                  "ACTIVIDAD: ${tituloController.text}",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              Text("ACTIVIDAD:"),
+              TextField(
+                controller: tituloController,
+                decoration: InputDecoration(border: OutlineInputBorder()),
               ),
               SizedBox(height: 20),
+              Text("Pasos:"),
               for (int i = 0; i < pasosControllers.length; i++) ...[
-                Text(
-                  "Describe el paso ${i + 1}:",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
+                Text("Paso ${i + 1}:"),
                 TextField(
                   controller: pasosControllers[i],
-                  maxLines: 3,
                   decoration: InputDecoration(
-                    hintText: 'Cambia el contenido del paso',
+                    hintText: 'Descripción del paso',
                     border: OutlineInputBorder(),
                   ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _seleccionarImagen(i),
+                      child: Text('Seleccionar Imagen'),
+                    ),
+                    SizedBox(width: 10),
+                    if (widget.tarea.imagenes[i].isNotEmpty)
+                      Image.network(
+                        widget.tarea.imagenes[i],
+                        width: 50,
+                        height: 50,
+                      ),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _eliminarPaso(i),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
               ],
               Center(
+                child: OutlinedButton(
+                  onPressed: _agregarPaso,
+                  child: Text("Agregar Paso"),
+                ),
+              ),
+              SizedBox(height: 20),
+              Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // In next iterations we will implement the functionality to save the changes
-                    // Actualize the title and steps in the task object
-                    widget.tarea.titulo = tituloController.text;
-                    widget.tarea.pasos = pasosControllers.map((c) => c.text).toList();
-
-                    Navigator.pop(context);
-                  },
+                  onPressed: _guardarCambios,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   ),
-                  child: Text(
-                    'Guardar Cambios',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: Text("Guardar Cambios",
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],
