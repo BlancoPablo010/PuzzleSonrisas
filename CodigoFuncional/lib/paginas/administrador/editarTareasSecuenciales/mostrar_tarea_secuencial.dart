@@ -74,7 +74,6 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                 if (widget.tarea.imagenes.isNotEmpty && widget.tarea.imagenes[_currentStep] != "")
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 16.0),
@@ -86,10 +85,10 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                   ),
                 Text(
                   widget.tarea.pasos.isNotEmpty ? widget.tarea.pasos[_currentStep] : "No hay pasos disponibles",
-                  style: const TextStyle(fontSize: 25),
+                  style: const TextStyle(fontSize: 60),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Row(
@@ -97,7 +96,7 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                     children: [
                       if (_currentStep > 0)
                         IconButton(
-                          icon: const Icon(Icons.arrow_back, size: 30),
+                          icon: const Icon(Icons.arrow_back, size: 250),
                           onPressed: () {
                             setState(() {
                               _currentStep--;
@@ -107,7 +106,7 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                       const Spacer(),
                       if (_currentStep < widget.tarea.pasos.length - 1)
                         IconButton(
-                          icon: const Icon(Icons.arrow_forward, size: 30),
+                          icon: const Icon(Icons.arrow_forward, size: 250),
                           onPressed: () {
                             setState(() {
                               _currentStep++;
@@ -116,7 +115,7 @@ class _MostrarTareaSecuencialState extends State<MostrarTareaSecuencial> {
                         ),
                       if (_currentStep == widget.tarea.pasos.length - 1)
                         IconButton(
-                          icon: const Icon(Icons.check, size: 30),
+                          icon: const Icon(Icons.check, size: 250),
                           onPressed: () {
                             if (CurrentUser().rol == 'Alumno') {
                               _desasignarTarea(CurrentUser().id!, widget.tarea.id);

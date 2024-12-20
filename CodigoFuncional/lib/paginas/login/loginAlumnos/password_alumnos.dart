@@ -128,7 +128,7 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                           if (passwordPosicion != -1) {
 
                             password[passwordPosicion] = pictogramasPassword[i]['id'];
-                            print(password[passwordPosicion]);
+                            
                           }
                         
                       }),
@@ -167,7 +167,6 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                           if (passwordPosicion != -1) {
 
                             password[passwordPosicion] = pictogramasPassword[i]['id'];
-                            print(password[passwordPosicion]);
                           }
                         
                       }),
@@ -281,8 +280,6 @@ class _PasswordAlumnosState extends State<PasswordAlumnos> {
                     // Aquí se debe validar la contraseña
                     // Si es correcta, se debe redirigir a la pantalla de inicio
                     // Si es incorrecta, se debe mostrar un mensaje de error
-                    print('Usuario: ${user.toString()}');
-                    print('Contraseña: ${password.join()}');
 
                     _login(context, user.toString(), password.join());
                   },

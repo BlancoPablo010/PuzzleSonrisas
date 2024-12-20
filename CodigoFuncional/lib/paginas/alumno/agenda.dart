@@ -100,7 +100,7 @@ class _AgendaState extends State<Agenda> {
                       }
                     
                   }
-                  final tarea = Tarea(id: tareaJSON['_id'], titulo: tareaJSON['titulo'], numero_pasos: tareaJSON['numero_pasos'] as int, pasos: pasos, imagenes: imagenes);
+                  final tarea = Tarea(id: tareaJSON['_id'], titulo: tareaJSON['titulo'], numero_pasos: tareaJSON['numero_pasos'] as int, pasos: pasos, imagenes: imagenes, imagenPrincipal: tareaJSON['imagen_principal']);
                 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -134,7 +134,7 @@ class _AgendaState extends State<Agenda> {
                           ],
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
                               tarea.titulo,
@@ -146,7 +146,7 @@ class _AgendaState extends State<Agenda> {
                               ),
                             ),
                             const SizedBox(height: 6), // Espacio reducido
-                            Image.network(tarea.imagenPrincipal, width: 100, height: 100),
+                            Image.network(tarea.imagenPrincipal, width: MediaQuery.of(context).size.width * 0.4, height: MediaQuery.of(context).size.height * 0.4),
                             const SizedBox(height: 6), // Espacio reducido
                             Text(
                               'Pasos: ${tarea.numero_pasos}',
