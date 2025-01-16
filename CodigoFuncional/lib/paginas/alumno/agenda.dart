@@ -137,7 +137,7 @@ class _AgendaState extends State<Agenda> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              tarea.titulo,
+                              tarea.titulo, 
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 30, // Tamaño más pequeño del texto
